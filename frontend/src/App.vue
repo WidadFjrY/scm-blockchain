@@ -6,8 +6,8 @@ import { ref, computed } from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie'
 
-import SideBar from './components/SideBar.vue';
-import NavBar from './components/NavBar.vue';
+import SideBar from '@/components/SideBar.vue';
+import NavBar from '@/components/NavBar.vue';
 
 CheckAuth()
 const route = useRoute()
@@ -40,7 +40,7 @@ getDataUser()
 
 <template>
   <div v-if="route.path !== '/login'">
-    <SiddeBar :role="user.role"></SiddeBar>
+    <SideBar :role="user.role"></SideBar>
     <div class="view">
       <NavBar :title="route.name" :user="user.name" :role="user.role"></NavBar>
       <router-view></router-view>

@@ -23,9 +23,11 @@ func Run() {
 
 	userCntrl := di.UserDI(db, validator)
 	DistrbutorCntrl := di.DistributorDI(db, validator)
+	ProductCntrl := di.ProductDI(db, validator)
 
 	router.UserRouter(gin, db, userCntrl)
 	router.DistributorRouter(gin, db, DistrbutorCntrl)
+	router.ProductRouter(gin, db, ProductCntrl)
 
 	err := gin.Run("localhost:8080")
 	helper.Err(err)

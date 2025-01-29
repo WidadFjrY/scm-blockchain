@@ -42,6 +42,7 @@ func NewDB() *gorm.DB {
 	// }
 
 	db.AutoMigrate(
+		&model.Product{},
 		&model.Distributor{},
 		&model.User{},
 		&model.TokenAuth{},

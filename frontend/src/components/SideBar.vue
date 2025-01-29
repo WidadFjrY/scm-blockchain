@@ -13,11 +13,11 @@ const route = useRoute()
 const appName = import.meta.env.VITE_APP_NAME
 const links = ref([
     { name: "Dashboard", link: "/", icon: '/assets/icon/Dashboard.png', isVisible: true },
-    { name: "Manajemen Pesanan", link: "/orders", icon: '/assets/icon/Manajemen Pesanan.png', isVisible: props.role === "Admin" },
-    { name: "Manajemen Distributor", link: "/distributors", icon: '/assets/icon/Manajemen Distributor.png', isVisible: props.role === "Admin" },
+    { name: "Manajemen Pesanan", link: "/orders", icon: '/assets/icon/Manajemen Pesanan.png', isVisible: true },
+    { name: "Manajemen Distributor", link: "/distributors", icon: '/assets/icon/Manajemen Distributor.png', isVisible: true },
     { name: "Produk", link: "/products", icon: '/assets/icon/Produk.png', isVisible: true },
     { name: "Laporan", link: "/reports", icon: '/assets/icon/Laporan.png', isVisible: true },
-    { name: "Pengguna", link: "/users", icon: '/assets/icon/Pengguna.png', isVisible: props.role === "Admin" },
+    { name: "Pengguna", link: "/users", icon: '/assets/icon/Pengguna.png', isVisible: true },
     { name: "Profil", link: "/profile", icon: '/assets/icon/Profil.png', isVisible: true },
 ])
 

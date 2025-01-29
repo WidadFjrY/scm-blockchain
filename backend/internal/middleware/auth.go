@@ -60,6 +60,7 @@ func Auth(db *gorm.DB) gin.HandlerFunc {
 
 		ctx.Set("email", claims.Email)
 		ctx.Set("user_id", claims.UserId)
+		ctx.Set("role", claims.Role)
 
 		ctx.Next()
 	}

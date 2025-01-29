@@ -103,6 +103,7 @@ func (serv *UserServiceImpl) LoginUser(ctx context.Context, request web.UserLogi
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, web.JwtClaims{
 		Email:  user.Email,
 		UserId: user.ID,
+		Role:   user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},
