@@ -24,8 +24,6 @@ const links = ref([
 const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
 const token = Cookies.get("AUTH_TOKEN")
 
-console.log(links.value)
-console.log(props)
 
 async function logoutHandle() {
     try {
@@ -73,6 +71,8 @@ async function logoutHandle() {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
 }
 
 .head {

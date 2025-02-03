@@ -38,7 +38,7 @@ func (repo *ProductRepositoryImpl) GetAll(ctx context.Context, tx *gorm.DB) []mo
 func (repo *ProductRepositoryImpl) GetById(ctx context.Context, tx *gorm.DB, productId string) model.Product {
 	var product model.Product
 
-	err := tx.WithContext(ctx).Where("id = ?", productId).First(&product).Error
+	err := tx.WithContext(ctx).Where("id = ?", productId).Preload("Distributor").First(&product).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		panic(exception.NewNotFoundError(fmt.Sprintf("product with id %s not found", productId)))
 	}

@@ -6,6 +6,7 @@ import Product from "@/pages/ProductPage.vue";
 import Report from "@/pages/ReportPage.vue";
 import Users from "@/pages/UsersPage.vue";
 import User from "@/pages/UserPage.vue";
+import FormProduct from "@/components/FormProduct.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -18,7 +19,10 @@ const routes = [
     name: "Manajemen Distributor",
     component: Distributor,
   },
+
   { path: "/products", name: "Produk", component: Product },
+  { path: "/add/product", name: "Tambah Produk", component: FormProduct },
+
   { path: "/reports", name: "Laporan", component: Report },
   { path: "/users", name: "Pengguna", component: Users },
   { path: "/profile", name: "Profil", component: User },

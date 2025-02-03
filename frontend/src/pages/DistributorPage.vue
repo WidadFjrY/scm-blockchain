@@ -1,6 +1,8 @@
 <script setup>
 import { reactive, ref, watch } from 'vue';
+
 import axios from 'axios'
+import { formatedDate } from '@/assets/script/formated-date';
 
 const state = reactive({
     search: null,
@@ -74,18 +76,6 @@ async function getDistributorById(id) {
     isModalOpen.value = !isModalOpen.value
 }
 
-function formatedDate(date) {
-    return new Date(date).toLocaleString('id-ID', {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-    })
-}
-
 getAllDistributor()
 
 
@@ -132,7 +122,7 @@ getAllDistributor()
 
     <div class="container">
         <h2>Daftar Distributor</h2>
-        <input type="text" placeholder="Cari Distributor" v-model="state.search" @input="filteredDistributors">
+        <input type="text" placeholder="Cari Distributor" v-model="state.search">
         <table v-if="state.distributors != null">
             <thead>
                 <tr>

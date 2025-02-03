@@ -29,6 +29,8 @@ func Run() {
 	router.DistributorRouter(gin, db, DistrbutorCntrl)
 	router.ProductRouter(gin, db, ProductCntrl)
 
+	gin.Static("/api/public", "./public")
+
 	err := gin.Run("localhost:8080")
 	helper.Err(err)
 }
