@@ -73,3 +73,12 @@ func (repo *UserRepositoryImpl) GetAll(ctx context.Context, tx *gorm.DB) []model
 
 	return user
 }
+
+func (repo *UserRepositoryImpl) GetUserByManager(ctx context.Context, tx *gorm.DB) []model.User {
+	var user []model.User
+
+	err := tx.WithContext(ctx).Where("role = 'Store Manager'").Find(&user).Error
+	helper.Err(err)
+
+	return user
+}

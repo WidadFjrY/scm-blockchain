@@ -10,4 +10,5 @@ type UserController interface {
 	GetUserByIdToken(ctx *gin.Context)
 	GetUserById(ctx *gin.Context)
 	GetAll(ctx *gin.Context)
+	GetUserByManager(ctx *gin.Context)
 }

@@ -80,3 +80,9 @@ func (contr *UserControllerImpl) GetUserById(ctx *gin.Context) {
 	response := contr.UserServ.GetUserById(ctx.Request.Context(), userId)
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
+
+func (contr *UserControllerImpl) GetUserByManager(ctx *gin.Context) {
+	role, _ := ctx.Get("role")
+	response := contr.UserServ.GetUserByManager(ctx.Request.Context(), role.(string))
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}

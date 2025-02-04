@@ -15,6 +15,7 @@ const links = ref([
     { name: "Dashboard", link: "/", icon: '/assets/icon/Dashboard.png', isVisible: true },
     { name: "Manajemen Pesanan", link: "/orders", icon: '/assets/icon/Manajemen Pesanan.png', isVisible: true },
     { name: "Manajemen Distributor", link: "/distributors", icon: '/assets/icon/Manajemen Distributor.png', isVisible: true },
+    { name: "Manajemen Toko", link: "/store", icon: "/assets/icon/Manajemen Toko.png", isVisible: true },
     { name: "Produk", link: "/products", icon: '/assets/icon/Produk.png', isVisible: true },
     { name: "Laporan", link: "/reports", icon: '/assets/icon/Laporan.png', isVisible: true },
     { name: "Pengguna", link: "/users", icon: '/assets/icon/Pengguna.png', isVisible: true },

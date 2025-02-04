@@ -24,10 +24,12 @@ func Run() {
 	userCntrl := di.UserDI(db, validator)
 	DistrbutorCntrl := di.DistributorDI(db, validator)
 	ProductCntrl := di.ProductDI(db, validator)
+	StoreCntrl := di.StoreDI(db, validator)
 
 	router.UserRouter(gin, db, userCntrl)
 	router.DistributorRouter(gin, db, DistrbutorCntrl)
 	router.ProductRouter(gin, db, ProductCntrl)
+	router.StoreRouter(gin, db, StoreCntrl)
 
 	gin.Static("/api/public", "./public")
 

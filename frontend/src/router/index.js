@@ -4,6 +4,7 @@ import Login from "@/pages/LoginPage.vue";
 import Distributor from "@/pages/DistributorPage.vue";
 import Product from "@/pages/ProductPage.vue";
 import Report from "@/pages/ReportPage.vue";
+import Store from "@/pages/StorePage.vue";
 import Users from "@/pages/UsersPage.vue";
 import User from "@/pages/UserPage.vue";
 import FormProduct from "@/components/FormProduct.vue";
@@ -19,6 +20,8 @@ const routes = [
     name: "Manajemen Distributor",
     component: Distributor,
   },
+
+  { path: "/store", name: "Manajemen Toko", component: Store },
 
   { path: "/products", name: "Produk", component: Product },
   { path: "/add/product", name: "Tambah Produk", component: FormProduct },

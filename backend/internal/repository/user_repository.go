@@ -12,5 +12,6 @@ type UserRepository interface {
 	GetUserByEmail(ctx context.Context, tx *gorm.DB, email string) model.User
 	IsUserExsit(ctx context.Context, tx *gorm.DB, userId string) bool
 	GetUserById(ctx context.Context, tx *gorm.DB, userId string) model.User
+	GetUserByManager(ctx context.Context, tx *gorm.DB) []model.User
 	GetAll(ctx context.Context, tx *gorm.DB) []model.User
 }

@@ -1,151 +1,175 @@
 <script setup>
-import axios from 'axios';
-import { reactive, watch, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
+
+import axios from 'axios'
+import { formatedDate } from '@/assets/script/formated-date';
 
 const state = reactive({
     search: null,
-    users: null,
-    user: null,
-    filteredusers: null,
+    stores: null,
+    store: null,
+    filteredStore: null,
 })
 
+const storeManager = ref([])
 const isFormModalOpen = ref(false)
 const isModalOpen = ref(false)
-const errMsg = ref("")
-const userForm = ref({
-    email: "",
-    role: "",
-    password: "",
-    verify_password: ""
+const storeForm = ref({
+    user_id: "",
+    name: "",
+    address: "",
+    telp: "",
 })
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
-async function addUser() {
+async function getAllManager() {
     try {
-        console.log(userForm)
-        await axios.post(`${BACKEND_BASE_URL}/user/register`, {
-            email: userForm.value.email,
-            role: userForm.value.role,
-            password: userForm.value.password,
-            verify_password: userForm.value.verify_password,
-        })
-        getAllUser()
-        isFormModalOpen.value = false
+        const response = await axios.get(`${BACKEND_BASE_URL}/users/manager`)
+        storeManager.value = response.data.data
     } catch (error) {
-        errMsg.value = error.response.data.message
+
     }
 }
 
-async function getUserById(id) {
-
-}
-
-async function getAllUser() {
+async function getAllStore() {
     try {
-        const response = await axios.get(`${BACKEND_BASE_URL}/users`)
-        state.users = response.data.data
-        state.filteredusers = response.data.data
+        const response = await axios.get(`${BACKEND_BASE_URL}/store`)
+        state.stores = response.data.data
+        state.filteredStore = response.data.data
     } catch (error) {
         console.log(error)
     }
-    console.log(state.filteredusers)
 }
 
-getAllUser()
+async function addStoreHandle() {
+    try {
+        await axios.post(`${BACKEND_BASE_URL}/store`, {
+            user_id: storeForm.value.user_id,
+            name: storeForm.value.name,
+            address: storeForm.value.address,
+            telp: storeForm.value.telp.toString(),
+        })
+        isFormModalOpen.value = false
+        getAllStore()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getStoreById(id) {
+    try {
+        const response = await axios.get(`${BACKEND_BASE_URL}/store/${id}`)
+        state.store = response.data.data
+        console.log(response.data)
+    } catch (error) {
+        console.log(error)
+    }
+    isModalOpen.value = !isModalOpen.value
+}
+
+getAllManager()
+getAllStore()
 
 watch(
     () => state.search,
     (newValue) => {
         if (newValue) {
-            state.filteredusers = state.users.filter((item) =>
+            state.filteredStore = state.stores.filter((item) =>
                 newValue
                     .toLowerCase()
                     .split(" ")
                     .every(
                         (term) =>
-                            item.name.toLowerCase().includes(term) ||
-                            item.email.toLowerCase().includes(term)
+                            item.name.toLowerCase().includes(term)
                     )
             );
         } else {
-            state.filteredusers = state.users;
+            state.filteredStore = state.stores;
         }
     },
     { immediate: true }
 );
-
 </script>
 
 <template>
+
     <div v-if="isFormModalOpen" class="modal-overlay" @click.self="isFormModalOpen = !isFormModalOpen">
         <div class="modal" id="modal">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Tambah Pengguna</h2>
+                <h2>Tambah Toko</h2>
                 <button @click="isFormModalOpen = !isFormModalOpen" class="btn-close">X</button>
             </div>
-            <p style="color: red;" v-if="errMsg">{{ errMsg }}</p>
-
             <form action="">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" v-model="userForm.email" required>
+                <label for="name">Nama Toko</label>
+                <input type="text" name="name" id="neme" v-model="storeForm.name" required>
 
-                <label for="role">Peran</label>
-
-                <select name="role" id="role" v-model="userForm.role">
-                    <option value="Admin">Admin</option>
-                    <option value="Distributor">Distributor</option>
-                    <option value="Store Manager">Manajer Toko</option>
+                <label for="user_id">Manajer Toko</label>
+                <select name="user_id" id="user_id" v-model="storeForm.user_id">
+                    <option v-for="(manager, index) in storeManager" :key="index" :value="manager.id">{{
+                        manager.name }}</option>
                 </select>
 
-                <label for="password">Kata Sandi</label>
-                <input type="password" name="password" id="password" v-model="userForm.password" required>
+                <label for="address">Alamat Toko</label>
+                <input type="text" name="address" id="address" v-model="storeForm.address" required>
 
-                <label for="verify_password">Ulangi Kata Sandi</label>
-                <input type="password" name="verify_password" id="verify_password" v-model="userForm.verify_password"
-                    required>
+                <label for="telp">No. Telp</label>
+                <input type="number" name="telp" id="telp" v-model="storeForm.telp" required>
 
-                <button @click.prevent="addUser">Tambah</button>
+                <button @click.prevent="addStoreHandle">Tambah</button>
             </form>
         </div>
     </div>
     <div v-if="isModalOpen" class="modal-overlay" @click.self="isModalOpen = !isModalOpen">
         <div class="modal" id="modal">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Detail Pengguna</h2>
+                <h2>Detail Distributor</h2>
                 <button @click="isModalOpen = !isModalOpen" class="btn-close">X</button>
             </div>
             <div class="content">
-
+                <h3>ID Toko</h3>
+                <p>{{ state.store.id }}</p>
+                <h3>Manajer</h3>
+                <p>{{ state.store.manager_name }}</p>
+                <h3>Nama Toko</h3>
+                <p>{{ state.store.name }}</p>
+                <h3>Alamat</h3>
+                <p>{{ state.store.address }}</p>
+                <h3>No. Telp</h3>
+                <p>{{ state.store.telp }}</p>
+                <h3>Ditambahkan Pada</h3>
+                <p>{{ formatedDate(state.store.created_at) }}</p>
+                <h3>Diperbaharui Pada</h3>
+                <p>{{ formatedDate(state.store.updated_at) }}</p>
             </div>
         </div>
     </div>
+
     <div class="container">
-        <h2>Daftar Pengguna</h2>
-        <input type="text" placeholder="Cari Distributor" v-model="state.search" @input="filteredusers">
-        <table v-if="state.users != null">
+        <h2>Daftar Toko</h2>
+        <input type="text" placeholder="Cari Toko" v-model="state.search">
+        <table v-if="state.stores != null">
             <thead>
                 <tr>
                     <th style="width: 5rem;">No</th>
-                    <th style="width: 15rem;">Nama</th>
-                    <th style="width: 25rem;">Email</th>
-                    <th style="width: 15rem;">Role</th>
+                    <th style="width: 20rem;">Toko</th>
+                    <th style="width: 35rem;">Alamat</th>
                     <th style="text-align: center;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(user, index) in state.filteredusers" :key="user.id">
+                <tr v-for="(store, index) in state.filteredStore" :key="store.id">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.role }}</td>
+                    <td>{{ store.name }}</td>
+                    <td>{{ store.address }}</td>
                     <td style="display: flex; justify-content: center;"><button
-                            @click.prevent="getUserById(user.id)">Lihat Detail</button></td>
+                            @click.prevent="getStoreById(store.id)">Lihat Detail</button></td>
                 </tr>
             </tbody>
         </table>
-        <button @click="isFormModalOpen = !isFormModalOpen">Tambah Pengguna</button>
+        <button @click="isFormModalOpen = !isFormModalOpen">Tambah Toko</button>
     </div>
+
 </template>
 
 <style scoped>
@@ -165,6 +189,7 @@ watch(
     width: 100%;
     font-size: 1.5rem;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
 }
 
 table {
@@ -285,17 +310,6 @@ button:hover {
     color: #d5d5d5;
 }
 
-.modal select {
-    width: 100%;
-    height: 3rem;
-    border: none;
-    outline: none;
-    background-color: #f2f2f2;
-    font-size: 1.2rem;
-    padding: 0 1rem;
-    border-radius: 1.5rem;
-}
-
 .modal form button {
     width: 100%;
     margin-top: 2rem;
@@ -313,6 +327,17 @@ button:hover {
     background: rgb(32, 193, 243);
     background: linear-gradient(90deg, rgba(32, 193, 243, 1) 23%, rgba(32, 125, 243, 1) 72%);
 
+}
+
+.modal select {
+    width: 100%;
+    height: 3rem;
+    border: none;
+    outline: none;
+    background-color: #f2f2f2;
+    font-size: 1.2rem;
+    padding: 0 1rem;
+    border-radius: 1.5rem;
 }
 
 .modal .btn-close {

@@ -11,4 +11,5 @@ type UserService interface {
 	LogoutUser(ctx context.Context, token string, userId string) web.UserLogoutResponse
 	GetUserById(ctx context.Context, userId string) web.UserGetResponse
 	GetAll(ctx context.Context) []web.UserGetResponse
+	GetUserByManager(ctx context.Context, role string) []web.UserGetResponse
 }

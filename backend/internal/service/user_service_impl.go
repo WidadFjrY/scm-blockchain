@@ -173,3 +173,30 @@ func (serv *UserServiceImpl) GetAll(ctx context.Context) []web.UserGetResponse {
 
 	return users
 }
+
+func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) []web.UserGetResponse {
+	var users []web.UserGetResponse
+
+	if role != "Admin" {
+		panic(exception.NewBadRequestError("have no authority"))
+	}
+
+	txErr := serv.DB.Transaction(func(tx *gorm.DB) error {
+		for _, user := range serv.UserRepo.GetUserByManager(ctx, tx) {
+			userResp := web.UserGetResponse{
+				ID:        user.ID,
+				Name:      user.Name,
+				Email:     user.Email,
+				Role:      user.Role,
+				CreatedAt: user.CreatedAt,
+				UpdatedAt: user.UpdatedAt,
+			}
+
+			users = append(users, userResp)
+		}
+		return nil
+	})
+	helper.Err(txErr)
+
+	return users
+}

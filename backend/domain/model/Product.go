@@ -7,7 +7,9 @@ import (
 type Product struct {
 	ID            string      `gorm:"primaryKey;type:char(15);not null"`
 	DistributorID string      `gorm:"type:char(15);not null"`
+	StoreID       *string     `gorm:"type:char(15)"`
 	ProductName   string      `gorm:"type:varchar(100);not null"`
+	Store         *Store      `gorm:"foreignKey:StoreID;references:ID"`
 	Distributor   Distributor `gorm:"foreignKey:DistributorID;references:ID"`
 	Brand         string      `gorm:"type:varchar(100);not null"`
 	Price         float32     `gorm:"type:float;not null;default:0"`
