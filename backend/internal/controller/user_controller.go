@@ -11,4 +11,6 @@ type UserController interface {
 	GetUserById(ctx *gin.Context)
 	GetAll(ctx *gin.Context)
 	GetUserByManager(ctx *gin.Context)
+	UpdateById(ctx *gin.Context)
+	UpdatePasswordById(ctx *gin.Context)
 }

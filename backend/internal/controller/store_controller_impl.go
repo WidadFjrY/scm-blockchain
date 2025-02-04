@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"scm-blockchain-ethereum/domain/web"
 	"scm-blockchain-ethereum/internal/service"
@@ -23,8 +22,6 @@ func (controller *StoreControllerImpl) Create(ctx *gin.Context) {
 	var request web.StoreCreateRequest
 	err := ctx.ShouldBind(&request)
 	helper.Err(err)
-
-	fmt.Println(request)
 
 	role, _ := ctx.Get("role")
 

@@ -89,10 +89,12 @@ func (serv *DistributorServiceImpl) GetByID(ctx context.Context, distributorId s
 	helper.Err(errTx)
 
 	return web.DistributorResponse{
-		ID:        distributor.ID,
-		Name:      distributor.Name,
-		Address:   distributor.Address,
-		CreatedAt: distributor.CreatedAt,
-		UpdatedAt: distributor.UpdatedAt,
+		ID:             distributor.ID,
+		Name:           distributor.Name,
+		Address:        distributor.Address,
+		Telp:           distributor.Telp,
+		PersonInCharge: distributor.User.Name,
+		CreatedAt:      distributor.CreatedAt,
+		UpdatedAt:      distributor.UpdatedAt,
 	}
 }

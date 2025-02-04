@@ -5,6 +5,7 @@ import "time"
 type UserCreateRequest struct {
 	Email          string `json:"email" validate:"required,email,min=1"`
 	Role           string `json:"role" validate:"required"`
+	Telp           string `json:"telp" validate:"required"`
 	Password       string `json:"password" validate:"required,min=8"`
 	VerifyPassword string `json:"verify_password" validate:"required,min=8"`
 }
@@ -34,6 +35,19 @@ type UserGetResponse struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Role      string    `json:"role"`
+	Telp      string    `json:"telp"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type UserUpdateRequest struct {
+	Email string `json:"email" validate:"required,email,min=1"`
+	Name  string `json:"name" validate:"required"`
+	Telp  string `json:"telp" validate:"required;"`
+}
+
+type UserUpdatePasswordRequest struct {
+	Password       string `json:"password" validate:"required,min=8"`
+	NewPassword    string `json:"new_password" validate:"required,min=8"`
+	VerifyPassword string `json:"verify_password" validate:"required,min=8"`
 }

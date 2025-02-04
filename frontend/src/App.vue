@@ -13,6 +13,7 @@ CheckAuth()
 const route = useRoute()
 
 const user = ref({
+  id: "",
   email: "",
   name: "",
   role: "",
@@ -22,15 +23,18 @@ const token = Cookies.get("AUTH_TOKEN")
 const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
 
 async function getDataUser() {
-  try {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
-    const response = await axios.get(`${BASE_URL_BACKEND}/user`)
+  if (token) {
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
+      const response = await axios.get(`${BASE_URL_BACKEND}/user`)
 
-    user.value.email = response.data.data.email
-    user.value.name = response.data.data.name
-    user.value.role = response.data.data.role
-  } catch (error) {
-    console.log(error)
+      user.value.email = response.data.data.email
+      user.value.name = response.data.data.name
+      user.value.role = response.data.data.role
+      user.value.id = response.data.data.id
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 

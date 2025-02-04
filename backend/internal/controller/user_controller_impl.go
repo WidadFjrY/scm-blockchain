@@ -86,3 +86,25 @@ func (contr *UserControllerImpl) GetUserByManager(ctx *gin.Context) {
 	response := contr.UserServ.GetUserByManager(ctx.Request.Context(), role.(string))
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
+
+func (contr *UserControllerImpl) UpdateById(ctx *gin.Context) {
+	userId, _ := ctx.Get("user_id")
+
+	var request web.UserUpdateRequest
+	err := ctx.ShouldBind(&request)
+	helper.Err(err)
+
+	response := contr.UserServ.UpdateById(ctx.Request.Context(), request, userId.(string))
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
+func (contr *UserControllerImpl) UpdatePasswordById(ctx *gin.Context) {
+	userId, _ := ctx.Get("user_id")
+
+	var request web.UserUpdatePasswordRequest
+	err := ctx.ShouldBind(&request)
+	helper.Err(err)
+
+	response := contr.UserServ.UpdatePassword(ctx.Request.Context(), request, userId.(string))
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}

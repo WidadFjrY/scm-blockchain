@@ -110,6 +110,11 @@ getAllDistributor()
                 <p>{{ state.distributor.id }}</p>
                 <h3>Nama Distributor</h3>
                 <p>{{ state.distributor.name }}</p>
+                <h3>Telp Distributor</h3>
+                <p>{{ state.distributor.telp }}</p>
+                <h3>Penanggung Jawab</h3>
+                <p>{{ state.distributor.person_in_charge ? state.distributor.person_in_charge : `Belum ada penanggung
+                    jawab` }}</p>
                 <h3>Alamat</h3>
                 <p>{{ state.distributor.address }}</p>
                 <h3>Ditambahkan Pada</h3>

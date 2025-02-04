@@ -1,13 +1,13 @@
-2025/02/03 13:22:27 [TRACE] 331.6µs | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 1.1853ms | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 586.9µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'users' AND table_type = 'BASE TABLE' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 533.7µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT * FROM `users` LIMIT 1 | -1 rows
-2025/02/03 13:22:27 [TRACE] 531.8µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'users' ORDER BY ORDINAL_POSITION | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 622.2µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 851.5µs | 
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 1.2042ms | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 733.9µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'users' AND table_type = 'BASE TABLE' | -1 rows
+2025/02/04 10:23:22 [TRACE] 507.8µs | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 537.2µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 536.5µs | SELECT * FROM `users` LIMIT 1 | -1 rows
+2025/02/04 10:23:22 [TRACE] 510.1µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'users' ORDER BY ORDINAL_POSITION | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 511.3µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 1.017ms | 
 SELECT
 	TABLE_NAME,
 	COLUMN_NAME,
@@ -21,114 +21,46 @@ WHERE
 ORDER BY
 	INDEX_NAME,
 	SEQ_IN_INDEX | 3 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 505.7µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 531.6µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'users' AND constraint_name = 'uni_users_email' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 510.5µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 576.7µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'users' AND constraint_name = 'fk_distributors_user' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 620.6µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 701.3µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'stores' AND table_type = 'BASE TABLE' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 583.6µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT * FROM `stores` LIMIT 1 | -1 rows
-2025/02/03 13:22:27 [TRACE] 537.1µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'stores' ORDER BY ORDINAL_POSITION | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 572.7µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 505.3µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'stores' AND constraint_name = 'fk_stores_user' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 525.4µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'distributors' AND table_type = 'BASE TABLE' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 611µs | SELECT * FROM `distributors` LIMIT 1 | -1 rows
-2025/02/03 13:22:27 [TRACE] 511µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'distributors' ORDER BY ORDINAL_POSITION | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 754.2µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 510.7µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'products' AND table_type = 'BASE TABLE' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 505.5µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT * FROM `products` LIMIT 1 | -1 rows
-2025/02/03 13:22:27 [TRACE] 1.0077ms | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'products' ORDER BY ORDINAL_POSITION | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 607.6µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 608.4µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'products' AND constraint_name = 'fk_stores_product' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 614.4µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 582.8µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'products' AND constraint_name = 'fk_distributors_products' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 599.4µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 700.5µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'token_auths' AND table_type = 'BASE TABLE' | -1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT DATABASE() | -1 rows
-2025/02/03 13:22:27 [TRACE] 706.4µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
-2025/02/03 13:22:27 [TRACE] 0s | SELECT * FROM `token_auths` LIMIT 1 | -1 rows
-2025/02/03 13:22:27 [TRACE] 540µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'token_auths' ORDER BY ORDINAL_POSITION | -1 rows
-2025/02/03 13:22:30 [TRACE] 537.3µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2MzgxMjd9.quh3S85m-CjIhHpXBPkrAy5OicEDP6_NKb7lLvBNJCI' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:30 [TRACE] 583.2µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2MzgxMjd9.quh3S85m-CjIhHpXBPkrAy5OicEDP6_NKb7lLvBNJCI' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:30 [TRACE] 577.5µs | SELECT * FROM `users` WHERE id = 'daxyGQziKr4iddu' ORDER BY `users`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:30 [TRACE] 521.2µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2MzgxMjd9.quh3S85m-CjIhHpXBPkrAy5OicEDP6_NKb7lLvBNJCI' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:30 [TRACE] 0s | SELECT * FROM `users` WHERE role = 'Store Manager' | 1 rows
-2025/02/03 13:22:30 [TRACE] 766µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2MzgxMjd9.quh3S85m-CjIhHpXBPkrAy5OicEDP6_NKb7lLvBNJCI' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:30 [TRACE] 0s | SELECT * FROM `stores` WHERE `stores`.`deleted_at` IS NULL | 1 rows
-2025/02/03 13:22:32 [TRACE] 982.8µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2MzgxMjd9.quh3S85m-CjIhHpXBPkrAy5OicEDP6_NKb7lLvBNJCI' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:32 [TRACE] 537.1µs | SELECT * FROM `users` WHERE `users`.`id` = 'GCnBD9PXGIQooyd' | 1 rows
-2025/02/03 13:22:32 [TRACE] 1.6075ms | SELECT * FROM `stores` WHERE id = 'sQ5k0c37vldCg8d' AND `stores`.`deleted_at` IS NULL ORDER BY `stores`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:49 [TRACE] 712.7µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2MzgxMjd9.quh3S85m-CjIhHpXBPkrAy5OicEDP6_NKb7lLvBNJCI' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:49 [TRACE] 7.2334ms | UPDATE `token_auths` SET `is_valid`=false,`updated_at`='2025-02-03 13:22:49.678' WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2MzgxMjd9.quh3S85m-CjIhHpXBPkrAy5OicEDP6_NKb7lLvBNJCI' | 1 rows
-2025/02/03 13:22:50 [TRACE][ERROR] 158.1µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'undefined' ORDER BY `token_auths`.`id` LIMIT 1 | 0 rows | record not found
-2025/02/03 13:22:55 [TRACE] 715.1µs | SELECT * FROM `users` WHERE email = 'aa@gmail.com' ORDER BY `users`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:56 [TRACE] 1.0108ms | INSERT INTO `token_auths` (`token`,`is_valid`,`created_at`,`updated_at`) VALUES ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc',true,'2025-02-03 13:22:56.038','2025-02-03 13:22:56.038') | 1 rows
-2025/02/03 13:22:56 [TRACE] 538.3µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:56 [TRACE] 668.7µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:22:56 [TRACE] 673.9µs | SELECT * FROM `users` WHERE id = 'GCnBD9PXGIQooyd' ORDER BY `users`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:03 [TRACE] 254.2µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:03 [TRACE] 761.3µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:03 [TRACE] 537.5µs | SELECT * FROM `stores` WHERE `stores`.`deleted_at` IS NULL | 1 rows
-2025/02/03 13:23:03 [TRACE] 763.6µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:03 [TRACE] 549.1µs | SELECT * FROM `distributors` WHERE `distributors`.`deleted_at` IS NULL | 6 rows
-2025/02/03 13:23:04 [TRACE] 697.7µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:04 [TRACE] 933.1µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:04 [TRACE] 0s | SELECT * FROM `stores` WHERE `stores`.`deleted_at` IS NULL | 1 rows
-2025/02/03 13:23:05 [TRACE] 1.5082ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:05 [TRACE] 545.5µs | SELECT * FROM `distributors` WHERE `distributors`.`deleted_at` IS NULL | 6 rows
-2025/02/03 13:23:06 [TRACE] 1.0871ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:06 [TRACE] 1.0876ms | UPDATE `token_auths` SET `is_valid`=false,`updated_at`='2025-02-03 13:23:06.961' WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJHQ25CRDlQWEdJUW9veWQiLCJFbWFpbCI6ImFhQGdtYWlsLmNvbSIsIlJvbGUiOiJTdG9yZSBNYW5hZ2VyIiwiZXhwIjoxNzM4NjUwMTc2fQ.bnDGZL5ZEWA2J3-YHON8GXS5EMoz0UlqQgpnZMQycJc' | 1 rows
-2025/02/03 13:23:07 [TRACE][ERROR] 915.1µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'undefined' ORDER BY `token_auths`.`id` LIMIT 1 | 0 rows | record not found
-2025/02/03 13:23:12 [TRACE] 916.9µs | SELECT * FROM `users` WHERE email = 'widadfjry@gmail.com' ORDER BY `users`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:13 [TRACE] 1.0706ms | INSERT INTO `token_auths` (`token`,`is_valid`,`created_at`,`updated_at`) VALUES ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw',true,'2025-02-03 13:23:13.257','2025-02-03 13:23:13.257') | 1 rows
-2025/02/03 13:23:13 [TRACE] 790.1µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:13 [TRACE] 1.068ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:13 [TRACE] 739.1µs | SELECT * FROM `users` WHERE id = 'daxyGQziKr4iddu' ORDER BY `users`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:15 [TRACE] 810.7µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:15 [TRACE] 536.7µs | SELECT * FROM `users` WHERE role = 'Store Manager' | 1 rows
-2025/02/03 13:23:15 [TRACE] 682.5µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:15 [TRACE] 553.8µs | SELECT * FROM `stores` WHERE `stores`.`deleted_at` IS NULL | 1 rows
-2025/02/03 13:23:18 [TRACE] 825.1µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:23:18 [TRACE] 575.3µs | SELECT * FROM `users` WHERE `users`.`id` = 'GCnBD9PXGIQooyd' | 1 rows
-2025/02/03 13:23:18 [TRACE] 1.1919ms | SELECT * FROM `stores` WHERE id = 'sQ5k0c37vldCg8d' AND `stores`.`deleted_at` IS NULL ORDER BY `stores`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:24:46 [TRACE] 2.1747ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:24:46 [TRACE] 552.1µs | SELECT * FROM `distributors` WHERE `distributors`.`deleted_at` IS NULL | 6 rows
-2025/02/03 13:24:47 [TRACE] 1.3161ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:24:47 [TRACE] 526.1µs | SELECT * FROM `distributors` WHERE id = 'OlV8dWWPNxnEFpa' AND `distributors`.`deleted_at` IS NULL ORDER BY `distributors`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:24:50 [TRACE] 713.3µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:24:50 [TRACE] 713.3µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:24:50 [TRACE] 559µs | SELECT * FROM `stores` WHERE `stores`.`deleted_at` IS NULL | 1 rows
-2025/02/03 13:24:50 [TRACE] 559µs | SELECT * FROM `users` WHERE role = 'Store Manager' | 1 rows
-2025/02/03 13:24:51 [TRACE] 121.6µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:24:51 [TRACE] 0s | SELECT * FROM `users` WHERE `users`.`id` = 'GCnBD9PXGIQooyd' | 1 rows
-2025/02/03 13:24:51 [TRACE] 508µs | SELECT * FROM `stores` WHERE id = 'sQ5k0c37vldCg8d' AND `stores`.`deleted_at` IS NULL ORDER BY `stores`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:25:00 [TRACE] 657.3µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:25:00 [TRACE] 542.5µs | SELECT * FROM `products` | 1 rows
-2025/02/03 13:25:01 [TRACE] 694.9µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:25:01 [TRACE] 655.2µs | SELECT * FROM `distributors` WHERE `distributors`.`id` = 'zeSoAqhJ5YgzfTR' AND `distributors`.`deleted_at` IS NULL | 1 rows
-2025/02/03 13:25:01 [TRACE] 1.3492ms | SELECT * FROM `products` WHERE id = 'AXH80cbf1psJ49C' ORDER BY `products`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:25:14 [TRACE] 1.0399ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:25:14 [TRACE] 53.3µs | SELECT * FROM `users` | 3 rows
-2025/02/03 13:25:16 [TRACE] 1.3512ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 13:25:16 [TRACE] 506.4µs | SELECT * FROM `users` | 3 rows
-2025/02/03 19:13:23 [TRACE] 1.1445ms | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 19:13:23 [TRACE] 596.9µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 19:13:23 [TRACE] 542.2µs | SELECT * FROM `users` WHERE id = 'daxyGQziKr4iddu' ORDER BY `users`.`id` LIMIT 1 | 1 rows
-2025/02/03 19:13:23 [TRACE] 745.3µs | SELECT `is_valid` FROM `token_auths` WHERE token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYXh5R1F6aUtyNGlkZHUiLCJFbWFpbCI6IndpZGFkZmpyeUBnbWFpbC5jb20iLCJSb2xlIjoiQWRtaW4iLCJleHAiOjE3Mzg2NTAxOTN9.XvoFSUvzQhDCV7ECRaNrmoskA2lDhDSlCB45esaQBtw' ORDER BY `token_auths`.`id` LIMIT 1 | 1 rows
-2025/02/03 19:13:23 [TRACE] 545.5µs | SELECT * FROM `users` | 3 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 505.3µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 511.5µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'users' AND constraint_name = 'uni_users_email' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 510.6µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 597.3µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'users' AND constraint_name = 'fk_distributors_user' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 1.0287ms | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 508.3µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'stores' AND table_type = 'BASE TABLE' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 520.8µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT * FROM `stores` LIMIT 1 | -1 rows
+2025/02/04 10:23:22 [TRACE] 533.3µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'stores' ORDER BY ORDINAL_POSITION | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 644.3µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 506.6µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'stores' AND constraint_name = 'fk_stores_user' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 504.2µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 531.3µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'distributors' AND table_type = 'BASE TABLE' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 663.2µs | SELECT * FROM `distributors` LIMIT 1 | -1 rows
+2025/02/04 10:23:22 [TRACE] 507.2µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'distributors' ORDER BY ORDINAL_POSITION | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 569.5µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 506.3µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'products' AND table_type = 'BASE TABLE' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 504.7µs | SELECT * FROM `products` LIMIT 1 | -1 rows
+2025/02/04 10:23:22 [TRACE] 683µs | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'products' ORDER BY ORDINAL_POSITION | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 701.4µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 506.6µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'products' AND constraint_name = 'fk_distributors_products' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 614.1µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 505.1µs | SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'db_scm_blockcahin' AND table_name = 'products' AND constraint_name = 'fk_stores_product' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 558.3µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 505.6µs | SELECT count(*) FROM information_schema.tables WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'token_auths' AND table_type = 'BASE TABLE' | -1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT DATABASE() | -1 rows
+2025/02/04 10:23:22 [TRACE] 557.9µs | SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'db_scm_blockcahin%' ORDER BY SCHEMA_NAME='db_scm_blockcahin' DESC,SCHEMA_NAME limit 1 | 1 rows
+2025/02/04 10:23:22 [TRACE] 0s | SELECT * FROM `token_auths` LIMIT 1 | -1 rows
+2025/02/04 10:23:22 [TRACE] 1.0613ms | SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'db_scm_blockcahin' AND table_name = 'token_auths' ORDER BY ORDINAL_POSITION | -1 rows

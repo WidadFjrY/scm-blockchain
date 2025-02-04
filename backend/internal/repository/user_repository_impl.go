@@ -82,3 +82,31 @@ func (repo *UserRepositoryImpl) GetUserByManager(ctx context.Context, tx *gorm.D
 
 	return user
 }
+
+func (repo *UserRepositoryImpl) UpdateById(ctx context.Context, tx *gorm.DB, user model.User) {
+	err := tx.WithContext(ctx).Table("users").Where("id = ?", user.ID).Updates(map[string]interface{}{
+		"name":       user.Name,
+		"email":      user.Email,
+		"telp":       user.Telp,
+		"updated_at": time.Now(),
+	}).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(exception.NewNotFoundError(fmt.Sprintf("user with id %s not found", user.ID)))
+	}
+
+	helper.Err(err)
+}
+
+func (repo *UserRepositoryImpl) UpdatePassword(ctx context.Context, tx *gorm.DB, newPassword string, userId string) {
+	err := tx.WithContext(ctx).Table("users").Where("id = ?", userId).Updates(map[string]interface{}{
+		"password":   newPassword,
+		"updated_at": time.Now(),
+	}).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(exception.NewNotFoundError(fmt.Sprintf("user with id %s not found", userId)))
+	}
+
+	helper.Err(err)
+}

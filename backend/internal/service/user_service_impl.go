@@ -60,6 +60,7 @@ func (serv *UserServiceImpl) Create(ctx context.Context, request web.UserCreateR
 		ID:       userId,
 		Email:    request.Email,
 		Role:     request.Role,
+		Telp:     request.Telp,
 		Password: string(hasedPass),
 		Name:     userName,
 	}
@@ -134,6 +135,7 @@ func (serv *UserServiceImpl) GetUserById(ctx context.Context, userId string) web
 		Name:      user.Name,
 		Email:     user.Email,
 		Role:      user.Role,
+		Telp:      user.Telp,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}
@@ -188,6 +190,7 @@ func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) 
 				Name:      user.Name,
 				Email:     user.Email,
 				Role:      user.Role,
+				Telp:      user.Telp,
 				CreatedAt: user.CreatedAt,
 				UpdatedAt: user.UpdatedAt,
 			}
@@ -199,4 +202,48 @@ func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) 
 	helper.Err(txErr)
 
 	return users
+}
+
+func (serv *UserServiceImpl) UpdateById(ctx context.Context, request web.UserUpdateRequest, userId string) time.Time {
+	valErr := serv.Validator.Struct(&request)
+	helper.ValError(valErr)
+
+	err := serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.UserRepo.UpdateById(ctx, tx, model.User{
+			ID:    userId,
+			Name:  request.Name,
+			Email: request.Email,
+			Telp:  request.Telp,
+		})
+		return nil
+	})
+
+	helper.Err(err)
+	return time.Now()
+}
+
+func (serv *UserServiceImpl) UpdatePassword(ctx context.Context, request web.UserUpdatePasswordRequest, userId string) time.Time {
+	valErr := serv.Validator.Struct(&request)
+	helper.ValError(valErr)
+
+	serv.DB.Transaction(func(tx *gorm.DB) error {
+		user := serv.UserRepo.GetUserById(ctx, tx, userId)
+
+		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
+		if err != nil {
+			panic(exception.NewBadRequestError("password wrong!"))
+		} else if request.NewPassword != request.VerifyPassword {
+			panic(exception.NewBadRequestError("password doesn't match!"))
+		}
+
+		newHashPassword, err := bcrypt.GenerateFromPassword([]byte(request.NewPassword), 12)
+		helper.Err(err)
+
+		serv.UserRepo.UpdateById(ctx, tx, model.User{
+			ID:       userId,
+			Password: string(newHashPassword),
+		})
+		return nil
+	})
+	return time.Now()
 }

@@ -33,7 +33,7 @@ func (repo *DistributorRepositoryImpl) GetAll(ctx context.Context, tx *gorm.DB) 
 func (repo *DistributorRepositoryImpl) GetByID(ctx context.Context, tx *gorm.DB, distributorId string) model.Distributor {
 	var distributor model.Distributor
 
-	err := tx.WithContext(ctx).Where("id = ?", distributorId).First(&distributor).Error
+	err := tx.WithContext(ctx).Where("id = ?", distributorId).Preload("User").First(&distributor).Error
 	helper.Err(err)
 
 	return distributor
