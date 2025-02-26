@@ -33,13 +33,14 @@ type UserLogoutResponse struct {
 }
 
 type UserGetResponse struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Role      string    `json:"role"`
-	Telp      string    `json:"telp"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID         string    `json:"id"`
+	Name       string    `json:"name"`
+	Email      string    `json:"email"`
+	ETHAddress string    `json:"eth_addr"`
+	Role       string    `json:"role"`
+	Telp       string    `json:"telp"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 type UserUpdateRequest struct {

@@ -21,11 +21,11 @@ func Run() {
 	gin := gin.Default()
 	gin.Use(helper.NewFileGinLog(), middleware.CORSMiddleware(), middleware.ErrorHandling())
 
-	userCntrl := di.UserDI(db, validator)
-	ProductCntrl := di.ProductDI(db, validator)
+	userContr := di.UserDI(db, validator)
+	productContr := di.ProductDI(db, validator)
 
-	router.UserRouter(gin, db, userCntrl)
-	router.ProductRouter(gin, db, ProductCntrl)
+	router.UserRouter(gin, db, userContr)
+	router.ProductRouter(gin, db, productContr)
 
 	gin.Static("/api/public", "./public")
 

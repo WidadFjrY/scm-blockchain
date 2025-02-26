@@ -12,7 +12,7 @@ import (
 func ProductDI(db *gorm.DB, validator *validator.Validate) controller.ProductController {
 	repo := repository.NewProductRepository()
 	serv := service.NewProductService(db, validator, repo)
-	cntrl := controller.NewProductContrller(serv)
+	cntrl := controller.NewProductController(serv)
 
 	return cntrl
 }

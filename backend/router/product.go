@@ -9,11 +9,12 @@ import (
 )
 
 func ProductRouter(router *gin.Engine, db *gorm.DB, contrl controller.ProductController) {
+
 	auth := router.Group("/")
 	auth.Use(middleware.Auth(db))
 	{
-		auth.POST("/api/product", contrl.Create)
-		auth.GET("/api/product", contrl.GetAll)
-		auth.GET("/api/product/:product_id", contrl.GetById)
+		auth.POST("/api/product/add", contrl.ProductCreate)
+		auth.POST("/api/brand/add", contrl.BrandCreate)
+		auth.POST("/api/unit/add", contrl.UnitCreate)
 	}
 }

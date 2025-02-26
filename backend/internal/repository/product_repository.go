@@ -8,7 +8,7 @@ import (
 )
 
 type ProductRepository interface {
-	Create(ctx context.Context, tx *gorm.DB, product model.Product) model.Product
-	GetAll(ctx context.Context, tx *gorm.DB) []model.Product
-	GetById(ctx context.Context, tx *gorm.DB, productId string) model.Product
+	ProductCreate(ctx context.Context, tx *gorm.DB, product model.NormalizedProduct)
+	BrandCreate(ctx context.Context, tx *gorm.DB, Brand model.ProductBrand)
+	UnitCreate(ctx context.Context, tx *gorm.DB, Unit model.ProductUnit)
 }

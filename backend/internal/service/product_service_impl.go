@@ -2,11 +2,10 @@ package service
 
 import (
 	"context"
-	"math/rand"
+	"fmt"
 	"scm-blockchain-ethereum/domain/model"
 	"scm-blockchain-ethereum/domain/web"
 	"scm-blockchain-ethereum/internal/repository"
-	"scm-blockchain-ethereum/pkg/exception"
 	"scm-blockchain-ethereum/pkg/helper"
 	"time"
 
@@ -15,94 +14,89 @@ import (
 )
 
 type ProductServiceImpl struct {
-	DB          *gorm.DB
-	Validator   *validator.Validate
-	ProductRepo repository.ProductRepository
+	DB        *gorm.DB
+	Validator *validator.Validate
+	Repo      repository.ProductRepository
 }
 
-func NewProductService(db *gorm.DB, validator *validator.Validate, productRepo repository.ProductRepository) ProductService {
-	return &ProductServiceImpl{DB: db, Validator: validator, ProductRepo: productRepo}
+func NewProductService(db *gorm.DB, validator *validator.Validate, repo repository.ProductRepository) ProductService {
+	return &ProductServiceImpl{DB: db, Validator: validator, Repo: repo}
 }
 
-func (serv *ProductServiceImpl) Create(ctx context.Context, request web.ProductCreateRequest, filePath string, role string) web.ProductCreateResponse {
+func (serv *ProductServiceImpl) ProductCreate(ctx context.Context, request web.ProductCreateRequest, filePath string) web.ProductCreateResponse {
 	valErr := serv.Validator.Struct(&request)
 	helper.ValError(valErr)
 
-	if role != "Admin" && role != "Distributor" {
-		panic(exception.NewBadRequestError("have no authority"))
-	}
+	productId := fmt.Sprintf("PRD%s", helper.GenerateRandomString(9))
+	priceId := fmt.Sprintf("PRC%s", helper.GenerateRandomString(9))
+	stockId := fmt.Sprintf("STK%s", helper.GenerateRandomString(9))
 
-	var product model.Product
-
-	rand.NewSource(time.Now().Unix())
-	err := serv.DB.Transaction(func(tx *gorm.DB) error {
-		product = serv.ProductRepo.Create(ctx, tx, model.Product{
-			ID:            helper.GenerateRandomString(15),
-			DistributorID: request.DistributorID,
-			ProductName:   request.ProductName,
-			Brand:         request.Brand,
-			Stock:         request.Stock,
-			Price:         request.Price,
-			Unit:          request.Unit,
-			Status:        request.Status,
-			UrlPricture:   filePath,
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.ProductCreate(ctx, tx, model.NormalizedProduct{
+			Product: model.Product{
+				ID:          productId,
+				ProductName: request.ProductName,
+				BrandID:     request.BrandId,
+				UnitID:      request.UnitId,
+				Description: request.Description,
+				PicturePath: filePath,
+			},
+			ProductPrice: model.ProductPrice{
+				ID:        priceId,
+				ProductID: productId,
+				Price:     request.Price,
+			},
+			ProductStock: model.ProductStock{
+				ID:        stockId,
+				ProductID: productId,
+				StockIn:   request.Stock,
+			},
 		})
-
 		return nil
-	})
-	helper.Err(err)
+	}))
 
 	return web.ProductCreateResponse{
-		ProductName: product.ProductName,
-		CreatedAt:   product.CreatedAt,
+		ProductName: request.ProductName,
+		CreatedAt:   time.Now(),
 	}
 }
 
-func (serv *ProductServiceImpl) GetAll(ctx context.Context) []web.ProductResponse {
-	var products []web.ProductResponse
+func (serv *ProductServiceImpl) BrandCreate(ctx context.Context, request web.BrandCreateRequest) web.BrandCreateResponse {
+	valErr := serv.Validator.Struct(&request)
+	helper.ValError(valErr)
 
-	err := serv.DB.Transaction(func(tx *gorm.DB) error {
-		for _, productModel := range serv.ProductRepo.GetAll(ctx, tx) {
-			product := web.ProductResponse{
-				ID:          productModel.ID,
-				ProductName: productModel.ProductName,
-				Brand:       productModel.Brand,
-				Price:       helper.FormatRupiah(productModel.Price),
-				Stock:       productModel.Stock,
-				Unit:        productModel.Unit,
-				Status:      productModel.Status,
-				UrlPricture: productModel.UrlPricture,
-				CreatedAt:   productModel.CreatedAt,
-				UpdatedAt:   productModel.UpdatedAt,
-			}
-			products = append(products, product)
-		}
+	brandId := fmt.Sprintf("BRN%s", helper.GenerateRandomString(9))
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.BrandCreate(ctx, tx, model.ProductBrand{
+			ID:   brandId,
+			Name: request.BrandName,
+		})
 		return nil
-	})
-	helper.Err(err)
-	return products
+	}))
+
+	return web.BrandCreateResponse{
+		BrandName: request.BrandName,
+		CreatedAt: time.Now(),
+	}
 }
 
-func (serv *ProductServiceImpl) GetById(ctx context.Context, productId string) web.ProductResponse {
-	var product web.ProductResponse
+func (serv *ProductServiceImpl) UnitCreate(ctx context.Context, request web.UnitCreateRequest) web.UnitCreateResponse {
+	valErr := serv.Validator.Struct(&request)
+	helper.ValError(valErr)
 
-	err := serv.DB.Transaction(func(tx *gorm.DB) error {
-		productModel := serv.ProductRepo.GetById(ctx, tx, productId)
-		product = web.ProductResponse{
-			ID:             productModel.ID,
-			DistrbutorName: productModel.Distributor.Name,
-			ProductName:    productModel.ProductName,
-			Brand:          productModel.Brand,
-			Price:          helper.FormatRupiah(productModel.Price),
-			Stock:          productModel.Stock,
-			Unit:           productModel.Unit,
-			Status:         productModel.Status,
-			UrlPricture:    productModel.UrlPricture,
-			CreatedAt:      productModel.CreatedAt,
-			UpdatedAt:      productModel.UpdatedAt,
-		}
+	unitId := fmt.Sprintf("UNT%s", helper.GenerateRandomString(9))
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.UnitCreate(ctx, tx, model.ProductUnit{
+			ID:   unitId,
+			Name: request.UnitName,
+		})
 		return nil
-	})
-	helper.Err(err)
-	return product
+	}))
+
+	return web.UnitCreateResponse{
+		UnitName:  request.UnitName,
+		CreatedAt: time.Now(),
+	}
 }

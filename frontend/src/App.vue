@@ -1,17 +1,14 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { CheckAuth } from '@/assets/script/check-auth';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 import axios from 'axios';
 import Cookies from 'js-cookie'
 
-import SideBar from '@/components/SideBar.vue';
-import NavBar from '@/components/NavBar.vue';
-
 CheckAuth()
 const route = useRoute()
-
+const router = useRouter()
 const user = ref({
   id: "",
   email: "",
@@ -32,6 +29,7 @@ async function getDataUser() {
       user.value.name = response.data.data.name
       user.value.role = response.data.data.role
       user.value.id = response.data.data.id
+
     } catch (error) {
       console.log(error)
     }
@@ -43,14 +41,7 @@ getDataUser()
 </script>
 
 <template>
-  <div v-if="route.path !== '/login' && route.path !== '/register'">
-    <SideBar :role="user.role"></SideBar>
-    <div class="view">
-      <NavBar :title="route.name" :user="user.name" :role="user.role"></NavBar>
-      <router-view></router-view>
-    </div>
-  </div>
-  <router-view v-else></router-view>
+  <router-view></router-view>
 </template>
 
 <style scoped>

@@ -21,6 +21,8 @@
 
 a {
   text-decoration: none;
+  color: var(--dark-color);
+  transition: 0.5s ease;
 }
 
 li {

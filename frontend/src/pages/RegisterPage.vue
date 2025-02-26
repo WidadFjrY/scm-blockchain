@@ -3,7 +3,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { web3, userContract } from '@/assets/script/eth-transaction.js'
-import { v4 as uuidv4 } from 'uuid'
 
 import axios from 'axios'
 import Cookies from 'js-cookie'

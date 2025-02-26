@@ -14,6 +14,12 @@ import (
 	"gorm.io/gorm"
 )
 
+var adminOnlyPaths = []string{
+	"/api/product/add",
+	"/api/brand/add",
+	"/api/unit/add",
+}
+
 func Auth(db *gorm.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		godotenv.Load()
@@ -56,6 +62,20 @@ func Auth(db *gorm.DB) gin.HandlerFunc {
 			})
 			ctx.Abort()
 			return
+		}
+
+		for _, path := range adminOnlyPaths {
+			if strings.HasPrefix(ctx.Request.URL.Path, path) {
+				if claims.Role != "Admin" {
+					ctx.JSON(http.StatusForbidden, web.ErrorResponse{
+						Code:    http.StatusForbidden,
+						Status:  "Forbidden",
+						Message: "You are not authorized",
+					})
+					ctx.Abort()
+					return
+				}
+			}
 		}
 
 		ctx.Set("email", claims.Email)

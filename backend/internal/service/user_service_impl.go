@@ -129,13 +129,14 @@ func (serv *UserServiceImpl) GetUserById(ctx context.Context, userId string) web
 	helper.Err(txErr)
 
 	return web.UserGetResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		Role:      user.Role,
-		Telp:      user.Telp,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:         user.ID,
+		Name:       user.Name,
+		ETHAddress: helper.HideAddress(user.ETHAddress),
+		Email:      user.Email,
+		Role:       user.Role,
+		Telp:       user.Telp,
+		CreatedAt:  user.CreatedAt,
+		UpdatedAt:  user.UpdatedAt,
 	}
 }
 

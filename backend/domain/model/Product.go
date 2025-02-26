@@ -1,22 +1,46 @@
 package model
 
-import (
-	"time"
-)
+import "time"
+
+type NormalizedProduct struct {
+	Product      Product
+	ProductPrice ProductPrice
+	ProductStock ProductStock
+}
 
 type Product struct {
-	ID            string      `gorm:"primaryKey;type:char(15);not null"`
-	DistributorID string      `gorm:"type:char(15);not null"`
-	StoreID       *string     `gorm:"type:char(15)"`
-	ProductName   string      `gorm:"type:varchar(100);not null"`
-	Store         *Store      `gorm:"foreignKey:StoreID;references:ID"`
-	Distributor   Distributor `gorm:"foreignKey:DistributorID;references:ID"`
-	Brand         string      `gorm:"type:varchar(100);not null"`
-	Price         float32     `gorm:"type:float;not null;default:0"`
-	Stock         int         `gorm:"type:integer;not null;default:0"`
-	Unit          string      `gorm:"type:varchar(100);not null;"`
-	UrlPricture   string      `gorm:"type:varchar(100);not null;default:default.jpg"`
-	Status        string      `gorm:"type:varchar(100);not null;"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
+	ID          string `gorm:"primaryKey;type:char(15);not null"`
+	ProductName string `gorm:"type:varchar(100);not null"`
+	Description string `gorm:"type:text;default:null"`
+	PicturePath string `gorm:"type:varchar(100);default:default.jpg"`
+	BrandID     string `gorm:"not null"`
+	UnitID      string `gorm:"not null"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
+type ProductBrand struct {
+	ID   string `gorm:"primaryKey;type:char(15);not null"`
+	Name string `gorm:"type:varchar(100);not null;unique"`
+}
+
+type ProductUnit struct {
+	ID   string `gorm:"primaryKey;type:char(15);not null"`
+	Name string `gorm:"type:varchar(50);not null;unique"`
+}
+
+type ProductPrice struct {
+	ID        string    `gorm:"primaryKey;type:char(15);not null"`
+	ProductID string    `gorm:"type:char(15);not null"`
+	Price     float32   `gorm:"type:float;not null;default:0"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
+}
+
+type ProductStock struct {
+	ID         string    `gorm:"primaryKey;type:char(15);not null"`
+	ProductID  string    `gorm:"type:char(15);not null"`
+	StockIn    int       `gorm:"type:integer;default:0"`
+	StockOut   int       `gorm:"type:integer;default:0"`
+	StockTotal int       `gorm:"type:integer;not null"`
+	UpdatedAt  time.Time `gorm:"autoUpdateTime"`
 }
