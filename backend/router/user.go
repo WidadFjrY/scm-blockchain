@@ -23,6 +23,6 @@ func UserRouter(router *gin.Engine, db *gorm.DB, contrl controller.UserControlle
 		// 	auth.GET("/api/users/manager", contrl.GetUserByManager)
 		// 	auth.PUT("/api/user", contrl.UpdateById)
 		// 	auth.PUT("/api/user/password", contrl.UpdatePasswordById)
-		// 	auth.POST("/api/user/logout", contrl.Logout)
+		auth.POST("/api/user/logout", contrl.Logout)
 	}
 }

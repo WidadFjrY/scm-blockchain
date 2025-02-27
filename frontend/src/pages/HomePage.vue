@@ -3,21 +3,18 @@ import NavBar from '@/components/NavBar.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import semenImg from '@/assets/img/semen.png';
 
-import { CheckAuth } from '@/assets/script/check-auth';
 import { ref } from 'vue';
 
 import axios from 'axios';
-import Cookies from 'js-cookie'
 
-CheckAuth()
 const user = ref({
     name: "",
     ethAddr: "",
+    role: "",
 })
 
 const ethPrice = ref();
 const count = ref(0)
-const token = Cookies.get("AUTH_TOKEN")
 const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
 
 const convertToETH = (idrPrice) => {
@@ -25,23 +22,25 @@ const convertToETH = (idrPrice) => {
 };
 
 async function getDataUser() {
-    if (token) {
-        try {
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
-            const response = await axios.get(`${BASE_URL_BACKEND}/user`)
-
-            user.value.name = response.data.data.name
-            user.value.ethAddr = response.data.data.eth_addr
-
-        } catch (error) {
-            console.log(error)
-        }
+    try {
+        const response = await axios.get(`${BASE_URL_BACKEND}/user`)
+        user.value.name = response.data.data.name
+        user.value.ethAddr = response.data.data.eth_addr
+        user.value.role = response.data.data.role
+    } catch (error) {
+        console.log(error)
     }
+
 }
 
 async function ETHPrice() {
-    const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=idr");
-    ethPrice.value = response.data.ethereum.idr;
+    try {
+        const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=idr");
+        ethPrice.value = response.data.ethereum.idr;
+    } catch (error) {
+        ethPrice.value = "loading..."
+        console.log(error)
+    }
 }
 
 ETHPrice()
@@ -49,7 +48,7 @@ getDataUser()
 
 </script>
 <template>
-    <NavBar :name="user.name" :ethAddr="user.ethAddr"></NavBar>
+    <NavBar :name="user.name" :ethAddr="user.ethAddr" :role="user.role"></NavBar>
     <div class="container">
         <div class="head">
             <h1>Daftar Barang</h1>

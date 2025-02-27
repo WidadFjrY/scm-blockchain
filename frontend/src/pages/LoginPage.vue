@@ -16,25 +16,6 @@ const loginForm = ref({
 
 const errorMsg = ref("")
 
-const token = Cookies.get('AUTH_TOKEN')
-
-if (token) {
-    checkToken()
-}
-
-async function checkToken() {
-    try {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        const response = await axios.get(`${BASE_URL_BACKEND}/checkToken`)
-        if (response.status == 200) {
-            router.push('/')
-        }
-    } catch (error) {
-        router.push('/login')
-    }
-}
-
-
 async function loginHandle() {
     errorMsg.value = ""
     try {

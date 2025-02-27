@@ -7,6 +7,7 @@ import (
 	"scm-blockchain-ethereum/internal/service"
 	"scm-blockchain-ethereum/pkg/exception"
 	"scm-blockchain-ethereum/pkg/helper"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -50,7 +51,8 @@ func (contr *UserControllerImpl) Login(ctx *gin.Context) {
 }
 
 func (contr *UserControllerImpl) CheckToken(ctx *gin.Context) {
-	helper.Response(ctx, http.StatusOK, "OK", "")
+	role, _ := ctx.Get("role")
+	helper.Response(ctx, http.StatusOK, "OK", role.(string))
 }
 
 func (contr *UserControllerImpl) GetUserByIdToken(ctx *gin.Context) {
@@ -69,8 +71,6 @@ func (contr *UserControllerImpl) ValidateUser(ctx *gin.Context) {
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
 
-/*
-
 func (contr *UserControllerImpl) Logout(ctx *gin.Context) {
 	token := strings.Split(ctx.GetHeader("Authorization"), " ")[1]
 	userId, _ := ctx.Get("user_id")
@@ -78,6 +78,9 @@ func (contr *UserControllerImpl) Logout(ctx *gin.Context) {
 	response := contr.UserServ.LogoutUser(ctx.Request.Context(), token, userId.(string))
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
+
+/*
+
 
 
 

@@ -161,9 +161,6 @@ func (serv *UserServiceImpl) ValidateUser(ctx context.Context, request web.UserC
 	return true
 }
 
-/*
-
-
 func (serv *UserServiceImpl) LogoutUser(ctx context.Context, token string, userId string) web.UserLogoutResponse {
 	tokenRepo := repository.NewTokenRepository()
 	tokenServ := NewTokenService(serv.DB, tokenRepo)
@@ -175,6 +172,8 @@ func (serv *UserServiceImpl) LogoutUser(ctx context.Context, token string, userI
 		LoggedOutAt: time.Now(),
 	}
 }
+
+/*
 
 func (serv *UserServiceImpl) GetAll(ctx context.Context) []web.UserGetResponse {
 	var users []web.UserGetResponse

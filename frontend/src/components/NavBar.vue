@@ -1,12 +1,27 @@
 <script setup>
 
-import { ref } from 'vue';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const props = defineProps({
     name: "",
-    ethAddr: ""
+    ethAddr: "",
+    role: ""
 });
+
+const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+
+async function logoutHandle() {
+    try {
+        const response = await axios.post(`${BASE_URL_BACKEND}/user/logout`)
+        if (response.status === 200) {
+            Cookies.remove("AUTH_TOKEN")
+            window.location.href = "/login"
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 </script>
@@ -20,10 +35,14 @@ const props = defineProps({
             <li><router-link to="/transaction-hisoty">Riwayat Transasksi</router-link></li>
             <li><router-link to="/tracking">Lacak Pesanan</router-link></li>
             <li><router-link to="/cart">Keranjang</router-link></li>
+            <li v-if="props.role === 'Admin'"><router-link to="/dashboard">Dashboard</router-link></li>
         </ul>
         <ul>
             <li>{{ props.name }}</li>
             <li>{{ props.ethAddr }}</li>
+            <li @click.prevent="logoutHandle" style="cursor: pointer !important;"><img src="/assets/icon/logout.png"
+                    width="40" alt="">
+            </li>
         </ul>
     </nav>
 </template>
@@ -46,6 +65,7 @@ nav {
 
 ul {
     display: flex;
+    align-items: center;
     gap: 2rem;
 }
 
