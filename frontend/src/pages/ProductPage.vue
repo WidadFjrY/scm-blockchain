@@ -20,7 +20,7 @@ const state = reactive({
 
 const isModalOpen = ref(false)
 
-const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
 const convertToETH = (idrPrice) => {
     return ethPrice.value ? (idrPrice / ethPrice.value).toFixed(6) : "Loading...";
@@ -28,7 +28,7 @@ const convertToETH = (idrPrice) => {
 
 async function getProductById(id) {
     try {
-        const response = await axios.get(`${BASE_URL_BACKEND}/product/${id}`)
+        const response = await axios.get(`${BACKEND_BASE_URL}/product/${id}`)
         state.product = response.data.data
     } catch (error) {
         console.log(error)
@@ -39,7 +39,7 @@ async function getProductById(id) {
 
 async function getAllPrduct() {
     try {
-        const response = await axios.get(`${BASE_URL_BACKEND}/products`)
+        const response = await axios.get(`${BACKEND_BASE_URL}/products`)
         state.products = response.data.data;
         state.filteredProducts = response.data.data;
     } catch (error) {
@@ -55,7 +55,7 @@ const user = ref({
 
 async function getDataUser() {
     try {
-        const response = await axios.get(`${BASE_URL_BACKEND}/user`)
+        const response = await axios.get(`${BACKEND_BASE_URL}/user`)
         user.value.name = response.data.data.name
         user.value.ethAddr = response.data.data.eth_addr
         user.value.role = response.data.data.role
@@ -129,7 +129,7 @@ watch(
                 <div>
                     <h3>Gambar Produk</h3>
                     <div class="card">
-                        <img :src="`${BASE_URL_BACKEND}/${state.product.filepath}`" width="350" alt="">
+                        <img :src="`${BACKEND_BASE_URL}/${state.product.filepath}`" width="350" alt="">
                     </div>
                 </div>
             </div>

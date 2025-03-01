@@ -23,7 +23,7 @@ func NewProductService(db *gorm.DB, validator *validator.Validate, repo reposito
 	return &ProductServiceImpl{DB: db, Validator: validator, Repo: repo}
 }
 
-func (serv *ProductServiceImpl) ProductCreate(ctx context.Context, request web.ProductCreateRequest, filePath string) web.ProductCreateResponse {
+func (serv *ProductServiceImpl) ProductCreate(ctx context.Context, request web.ProductCreateRequest, filePath string, role string) web.ProductCreateResponse {
 	valErr := serv.Validator.Struct(&request)
 	helper.ValError(valErr)
 
@@ -61,12 +61,12 @@ func (serv *ProductServiceImpl) ProductCreate(ctx context.Context, request web.P
 	}))
 
 	return web.ProductCreateResponse{
-		ProductName: request.ProductName,
-		CreatedAt:   time.Now(),
+		ProductId: productId,
+		CreatedAt: time.Now(),
 	}
 }
 
-func (serv *ProductServiceImpl) BrandCreate(ctx context.Context, request web.BrandCreateRequest) web.BrandCreateResponse {
+func (serv *ProductServiceImpl) BrandCreate(ctx context.Context, request web.BrandCreateRequest, role string) web.BrandCreateResponse {
 	valErr := serv.Validator.Struct(&request)
 	helper.ValError(valErr)
 
@@ -86,7 +86,7 @@ func (serv *ProductServiceImpl) BrandCreate(ctx context.Context, request web.Bra
 	}
 }
 
-func (serv *ProductServiceImpl) UnitCreate(ctx context.Context, request web.UnitCreateRequest) web.UnitCreateResponse {
+func (serv *ProductServiceImpl) UnitCreate(ctx context.Context, request web.UnitCreateRequest, role string) web.UnitCreateResponse {
 	valErr := serv.Validator.Struct(&request)
 	helper.ValError(valErr)
 
@@ -111,17 +111,32 @@ func (serv *ProductServiceImpl) GetProducts(ctx context.Context) []web.ProductRe
 
 	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
 		for _, product := range serv.Repo.GetProducts(ctx, tx) {
+			var stockTotal int
+			if len(product.Stocks) > 0 {
+				stockTotal = product.Stocks[0].StockTotal
+			} else {
+				stockTotal = 0
+			}
+
+			var price float32
+			if len(product.Prices) > 0 {
+				price = product.Prices[0].Price
+			} else {
+				price = 0
+			}
+
 			products = append(products, web.ProductResponse{
 				ID:          product.ID,
 				ProductName: product.ProductName,
-				Stock:       product.Stocks[0].StockTotal,
+				Stock:       stockTotal,
 				Unit:        product.Unit.Name,
 				Brand:       product.Brand.Name,
 				FilePath:    product.PicturePath,
-				Price:       product.Prices[0].Price,
+				Price:       price,
 				Description: product.Description,
 				CreatedAt:   product.CreatedAt,
 			})
+			fmt.Println(product)
 		}
 		return nil
 	}))
@@ -150,4 +165,36 @@ func (serv *ProductServiceImpl) GetProduct(ctx context.Context, productId string
 	}))
 
 	return product
+}
+
+func (serv *ProductServiceImpl) GetBrands(ctx context.Context) []web.BrandResponse {
+	var brands []web.BrandResponse
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		for _, brand := range serv.Repo.GetBrands(ctx, tx) {
+			brands = append(brands, web.BrandResponse{
+				ID:        brand.ID,
+				BrandName: brand.Name,
+			})
+		}
+		return nil
+	}))
+
+	return brands
+}
+
+func (serv *ProductServiceImpl) GetUnits(ctx context.Context) []web.UnitResponse {
+	var units []web.UnitResponse
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		for _, unit := range serv.Repo.GetUnits(ctx, tx) {
+			units = append(units, web.UnitResponse{
+				ID:       unit.ID,
+				UnitName: unit.Name,
+			})
+		}
+		return nil
+	}))
+
+	return units
 }

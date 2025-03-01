@@ -9,11 +9,11 @@ const props = defineProps({
     role: ""
 });
 
-const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
 async function logoutHandle() {
     try {
-        const response = await axios.post(`${BASE_URL_BACKEND}/user/logout`)
+        const response = await axios.post(`${BACKEND_BASE_URL}/user/logout`)
         if (response.status === 200) {
             Cookies.remove("AUTH_TOKEN")
             window.location.href = "/login"
@@ -22,7 +22,6 @@ async function logoutHandle() {
         console.log(error)
     }
 }
-
 
 </script>
 <template>
@@ -35,7 +34,8 @@ async function logoutHandle() {
             <li><router-link to="/transaction-hisoty">Riwayat Transasksi</router-link></li>
             <li><router-link to="/tracking">Lacak Pesanan</router-link></li>
             <li><router-link to="/cart">Keranjang</router-link></li>
-            <li v-if="props.role === 'Admin'"><router-link to="/dashboard">Dashboard</router-link></li>
+            <li v-if="props.role === 'Admin' || props.role === 'Warehouse_Staff'"><router-link
+                    to="/dashboard">Dashboard</router-link></li>
         </ul>
         <ul>
             <li>{{ props.name }}</li>

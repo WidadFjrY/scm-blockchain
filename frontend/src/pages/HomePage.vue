@@ -18,7 +18,7 @@ const state = reactive({
 
 const ethPrice = ref();
 const count = ref(0)
-const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
 const convertToETH = (idrPrice) => {
     return ethPrice.value ? (idrPrice / ethPrice.value).toFixed(6) : "Loading...";
@@ -26,7 +26,7 @@ const convertToETH = (idrPrice) => {
 
 async function getDataUser() {
     try {
-        const response = await axios.get(`${BASE_URL_BACKEND}/user`)
+        const response = await axios.get(`${BACKEND_BASE_URL}/user`)
         user.value.name = response.data.data.name
         user.value.ethAddr = response.data.data.eth_addr
         user.value.role = response.data.data.role
@@ -48,7 +48,7 @@ async function ETHPrice() {
 
 async function getAllPrduct() {
     try {
-        const response = await axios.get(`${BASE_URL_BACKEND}/products`)
+        const response = await axios.get(`${BACKEND_BASE_URL}/products`)
         state.products = response.data.data;
     } catch (error) {
         console.log(error)
@@ -70,9 +70,11 @@ getDataUser()
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
             </div>
         </div>
-        <div v-for="(product, index) in state.products" :key="index">
-            <ProductCard :img="`${BASE_URL_BACKEND}/${product.filepath}`" :productName="product.product_name"
-                :stock=product.stock :unit=product.unit :brand=product.brand :price="convertToETH(product.price)" />
+        <div class="card-container">
+            <div v-for="(product, index) in state.products" :key="index">
+                <ProductCard :img="`${BACKEND_BASE_URL}/${product.filepath}`" :productName="product.product_name"
+                    :stock=product.stock :unit=product.unit :brand=product.brand :price="convertToETH(product.price)" />
+            </div>
         </div>
     </div>
 </template>
@@ -83,6 +85,13 @@ getDataUser()
     padding: 2rem;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 1rem;
+}
+
+
+.container .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .head {

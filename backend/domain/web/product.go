@@ -16,6 +16,16 @@ type ProductResponse struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
+type BrandResponse struct {
+	ID        string `json:"id"`
+	BrandName string `json:"brand_name"`
+}
+
+type UnitResponse struct {
+	ID       string `json:"id"`
+	UnitName string `json:"unit_name"`
+}
+
 type ProductCreateRequest struct {
 	ProductName string  `json:"product_name" validate:"required"`
 	BrandId     string  `json:"brand_id" validate:"required"`
@@ -26,8 +36,8 @@ type ProductCreateRequest struct {
 }
 
 type ProductCreateResponse struct {
-	ProductName string    `json:"product_name"`
-	CreatedAt   time.Time `json:"created_at"`
+	ProductId string    `json:"product_id"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type BrandCreateRequest struct {

@@ -16,11 +16,11 @@ const user = ref({
     role: "",
 })
 
-const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
 async function getDataUser() {
     try {
-        const response = await axios.get(`${BASE_URL_BACKEND}/user`)
+        const response = await axios.get(`${BACKEND_BASE_URL}/user`)
         user.value.name = response.data.data.name
         user.value.ethAddr = response.data.data.eth_addr
         user.value.role = response.data.data.role

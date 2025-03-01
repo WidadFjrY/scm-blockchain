@@ -7,7 +7,7 @@ import { web3, userContract } from '@/assets/script/eth-transaction.js'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
 const router = useRouter()
 const registerForm = ref({
@@ -20,50 +20,32 @@ const registerForm = ref({
 
 const errorMsg = ref("")
 
-const token = Cookies.get('AUTH_TOKEN')
-
-if (token) {
-    checkToken()
-}
-
-async function checkToken() {
-    try {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        const response = await axios.get(`${BASE_URL_BACKEND}/checkToken`)
-        if (response.status == 200) {
-            router.push('/')
-        }
-    } catch (error) {
-        router.push('/login')
-    }
-}
-
 async function registerHandle() {
     errorMsg.value = ""
     try {
 
-        const response = await axios.post(`${BASE_URL_BACKEND}/user/validate`, {
+        const account = await web3.eth.getAccounts()
+        const userAddress = account[0]
+
+        const response = await axios.post(`${BACKEND_BASE_URL}/user/validate`, {
             name: registerForm.value.name,
             email: registerForm.value.email,
-            eth_address: "userAddress",
+            eth_address: userAddress,
             telp: registerForm.value.telp,
             password: registerForm.value.password,
             verify_password: registerForm.value.verify_password
         })
 
         if (response.data.data) {
-            const account = await web3.eth.getAccounts()
-            const userAddress = account[0]
-
             const txReceipt = await userContract.methods
-                .registerUser(registerForm.value.name, "Customer")
+                .registerUser(registerForm.value.name, "admin")
                 .send({ from: userAddress })
 
             if (!txReceipt.status) {
                 throw new Error("Transaksi blockchain gagal")
             }
 
-            await axios.post(`${BASE_URL_BACKEND}/user/register`, {
+            await axios.post(`${BACKEND_BASE_URL}/user/register`, {
                 name: registerForm.value.name,
                 email: registerForm.value.email,
                 eth_address: userAddress,

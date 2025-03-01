@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var adminOnlyPaths = []string{
+var warehouseStaffOnlyPaths = []string{
 	"/api/product/add",
 	"/api/brand/add",
 	"/api/unit/add",
@@ -64,9 +64,9 @@ func Auth(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		for _, path := range adminOnlyPaths {
+		for _, path := range warehouseStaffOnlyPaths {
 			if strings.HasPrefix(ctx.Request.URL.Path, path) {
-				if claims.Role != "Admin" {
+				if claims.Role != "Warehouse_Staff" {
 					ctx.JSON(http.StatusForbidden, web.ErrorResponse{
 						Code:    http.StatusForbidden,
 						Status:  "Forbidden",

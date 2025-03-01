@@ -5,7 +5,7 @@
 
 // export function CheckAuth() {
 //   const router = useRouter();
-//   const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL;
+//   const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 //   const token = Cookies.get("AUTH_TOKEN");
 
 //   let role = "";
@@ -19,7 +19,7 @@
 //   async function checkToken() {
 //     try {
 //       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-//       const response = await axios.get(`${BASE_URL_BACKEND}/checkToken`);
+//       const response = await axios.get(`${BACKEND_BASE_URL}/checkToken`);
 //       role = response.data.data;
 //     } catch (error) {
 //       router.push("/login");

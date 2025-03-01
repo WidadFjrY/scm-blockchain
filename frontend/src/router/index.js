@@ -6,6 +6,7 @@ import Product from "@/pages/ProductPage.vue";
 import Order from "@/pages/OrderPage.vue";
 import Report from "@/pages/ReportPage.vue";
 import User from "@/pages/UserPage.vue";
+import FormProduct from "@/pages/FormProduct.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -26,6 +27,12 @@ const routes = [
     path: "/products",
     name: "Produk",
     component: Product,
+    meta: { requiresAdmin: true },
+  },
+  {
+    path: "/add/product",
+    name: "Tambah Produk",
+    component: FormProduct,
     meta: { requiresAdmin: true },
   },
   {
@@ -55,9 +62,10 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const token = Cookies.get("AUTH_TOKEN");
+
   const auth = await isAuthenticated(token);
 
-  if (to.name !== "Login" && !auth.status) {
+  if (to.name !== "Login" && !auth.status && to.name !== "Register") {
     return next({ name: "Login" });
   }
 
@@ -65,7 +73,10 @@ router.beforeEach(async (to, from, next) => {
     return next(from.name ? { name: from.name } : { name: "Home" });
   }
 
-  if (to.meta.requiresAdmin && auth.role !== "Admin") {
+  if (
+    to.meta.requiresAdmin &&
+    !(auth.role === "Admin" || auth.role === "Warehouse_Staff")
+  ) {
     return next({ name: "Home" });
   }
 
@@ -73,10 +84,10 @@ router.beforeEach(async (to, from, next) => {
 });
 
 async function isAuthenticated(token) {
-  const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL;
+  const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
   try {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    const response = await axios.get(`${BASE_URL_BACKEND}/checkToken`);
+    const response = await axios.get(`${BACKEND_BASE_URL}/checkToken`);
 
     return { status: response.status === 200, role: response.data.data };
   } catch (error) {

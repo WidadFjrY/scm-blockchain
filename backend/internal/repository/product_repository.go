@@ -14,4 +14,7 @@ type ProductRepository interface {
 
 	GetProducts(ctx context.Context, tx *gorm.DB) []model.Product
 	GetProduct(ctx context.Context, tx *gorm.DB, productId string) model.Product
+
+	GetBrands(ctx context.Context, tx *gorm.DB) []model.ProductBrand
+	GetUnits(ctx context.Context, tx *gorm.DB) []model.ProductUnit
 }

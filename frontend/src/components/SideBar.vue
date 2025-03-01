@@ -19,14 +19,14 @@ const links = ref([
     { name: "Pengguna", link: "/users", icon: '/assets/icon/Pengguna.png', isVisible: true },
 ])
 
-const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 const token = Cookies.get("AUTH_TOKEN")
 
 
 async function logoutHandle() {
     try {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        await axios.post(`${BASE_URL_BACKEND}/user/logout`)
+        await axios.post(`${BACKEND_BASE_URL}/user/logout`)
 
         Cookies.remove("AUTH_TOKEN")
         window.location.href = '/'

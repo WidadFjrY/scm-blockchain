@@ -6,9 +6,8 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-const BASE_URL_BACKEND = import.meta.env.VITE_BACKEND_BASE_URL
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
-const router = useRouter()
 const loginForm = ref({
     email: "",
     password: ""
@@ -19,7 +18,7 @@ const errorMsg = ref("")
 async function loginHandle() {
     errorMsg.value = ""
     try {
-        const response = await axios.post(`${BASE_URL_BACKEND}/user/login`, {
+        const response = await axios.post(`${BACKEND_BASE_URL}/user/login`, {
             email: loginForm.value.email,
             password: loginForm.value.password
         })

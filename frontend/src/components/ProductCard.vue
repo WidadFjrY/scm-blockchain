@@ -38,28 +38,16 @@ const props = defineProps({
 .card-img {
     width: 300px;
     height: 400px;
+    margin-bottom: 1rem;
 }
 
 .card .card-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 0.5rem;
 }
 
-.button-increment {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.button-increment button {
-    width: 30px;
-    height: 30px;
-    font-size: 1.5rem;
-    border: none;
-    cursor: pointer;
-}
 
 .price {
     font-size: 1.3rem;

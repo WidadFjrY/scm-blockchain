@@ -173,20 +173,20 @@ func (serv *UserServiceImpl) LogoutUser(ctx context.Context, token string, userI
 	}
 }
 
-/*
-
 func (serv *UserServiceImpl) GetAll(ctx context.Context) []web.UserGetResponse {
 	var users []web.UserGetResponse
 
 	txErr := serv.DB.Transaction(func(tx *gorm.DB) error {
 		for _, user := range serv.UserRepo.GetAll(ctx, tx) {
 			userResp := web.UserGetResponse{
-				ID:        user.ID,
-				Name:      user.Name,
-				Email:     user.Email,
-				Role:      user.Role,
-				CreatedAt: user.CreatedAt,
-				UpdatedAt: user.UpdatedAt,
+				ID:         user.ID,
+				Name:       user.Name,
+				Email:      user.Email,
+				ETHAddress: user.ETHAddress,
+				Telp:       user.Telp,
+				Role:       user.Role,
+				CreatedAt:  user.CreatedAt,
+				UpdatedAt:  user.UpdatedAt,
 			}
 
 			users = append(users, userResp)
@@ -198,23 +198,24 @@ func (serv *UserServiceImpl) GetAll(ctx context.Context) []web.UserGetResponse {
 	return users
 }
 
-func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) []web.UserGetResponse {
+/*
+				func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) []web.UserGetResponse {
 	var users []web.UserGetResponse
 
 	if role != "Admin" {
 		panic(exception.NewBadRequestError("have no authority"))
-	}
+		}
 
-	txErr := serv.DB.Transaction(func(tx *gorm.DB) error {
-		for _, user := range serv.UserRepo.GetUserByManager(ctx, tx) {
-			userResp := web.UserGetResponse{
-				ID:        user.ID,
-				Name:      user.Name,
-				Email:     user.Email,
-				Role:      user.Role,
-				Telp:      user.Telp,
-				CreatedAt: user.CreatedAt,
-				UpdatedAt: user.UpdatedAt,
+		txErr := serv.DB.Transaction(func(tx *gorm.DB) error {
+			for _, user := range serv.UserRepo.GetUserByManager(ctx, tx) {
+				userResp := web.UserGetResponse{
+					ID:        user.ID,
+					Name:      user.Name,
+					Email:     user.Email,
+					Role:      user.Role,
+					Telp:      user.Telp,
+					CreatedAt: user.CreatedAt,
+					UpdatedAt: user.UpdatedAt,
 			}
 
 			users = append(users, userResp)

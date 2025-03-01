@@ -79,11 +79,6 @@ func (contr *UserControllerImpl) Logout(ctx *gin.Context) {
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
 
-/*
-
-
-
-
 func (contr *UserControllerImpl) GetAll(ctx *gin.Context) {
 	response := contr.UserServ.GetAll(ctx.Request.Context())
 	helper.Response(ctx, http.StatusOK, "Ok", response)
@@ -96,6 +91,7 @@ func (contr *UserControllerImpl) GetUserById(ctx *gin.Context) {
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
 
+/*
 func (contr *UserControllerImpl) GetUserByManager(ctx *gin.Context) {
 	role, _ := ctx.Get("role")
 	response := contr.UserServ.GetUserByManager(ctx.Request.Context(), role.(string))

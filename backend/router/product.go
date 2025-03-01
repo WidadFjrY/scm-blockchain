@@ -18,5 +18,7 @@ func ProductRouter(router *gin.Engine, db *gorm.DB, contrl controller.ProductCon
 		auth.POST("/api/unit/add", contrl.UnitCreate)
 		auth.GET("/api/products", contrl.GetProducts)
 		auth.GET("/api/product/:productId", contrl.GetProduct)
+		auth.GET("/api/brands", contrl.GetBrands)
+		auth.GET("/api/units", contrl.GetUnits)
 	}
 }
