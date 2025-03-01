@@ -40,16 +40,21 @@ func (serv *ProductServiceImpl) ProductCreate(ctx context.Context, request web.P
 				UnitID:      request.UnitId,
 				Description: request.Description,
 				PicturePath: filePath,
+				CreatedAt:   time.Now(),
+				UpdatedAt:   time.Now(),
 			},
 			ProductPrice: model.ProductPrice{
 				ID:        priceId,
 				ProductID: productId,
 				Price:     request.Price,
+				UpdatedAt: time.Now(),
 			},
 			ProductStock: model.ProductStock{
-				ID:        stockId,
-				ProductID: productId,
-				StockIn:   request.Stock,
+				ID:         stockId,
+				ProductID:  productId,
+				StockIn:    request.Stock,
+				StockTotal: request.Stock,
+				UpdatedAt:  time.Now(),
 			},
 		})
 		return nil
@@ -99,4 +104,50 @@ func (serv *ProductServiceImpl) UnitCreate(ctx context.Context, request web.Unit
 		UnitName:  request.UnitName,
 		CreatedAt: time.Now(),
 	}
+}
+
+func (serv *ProductServiceImpl) GetProducts(ctx context.Context) []web.ProductResponse {
+	var products []web.ProductResponse
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		for _, product := range serv.Repo.GetProducts(ctx, tx) {
+			products = append(products, web.ProductResponse{
+				ID:          product.ID,
+				ProductName: product.ProductName,
+				Stock:       product.Stocks[0].StockTotal,
+				Unit:        product.Unit.Name,
+				Brand:       product.Brand.Name,
+				FilePath:    product.PicturePath,
+				Price:       product.Prices[0].Price,
+				Description: product.Description,
+				CreatedAt:   product.CreatedAt,
+			})
+		}
+		return nil
+	}))
+
+	return products
+}
+
+func (serv *ProductServiceImpl) GetProduct(ctx context.Context, productId string) web.ProductResponse {
+	var product web.ProductResponse
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		productModel := serv.Repo.GetProduct(ctx, tx, productId)
+		product = web.ProductResponse{
+			ID:          productModel.ID,
+			ProductName: productModel.ProductName,
+			Stock:       productModel.Stocks[0].StockTotal,
+			Unit:        productModel.Unit.Name,
+			Brand:       productModel.Brand.Name,
+			FilePath:    productModel.PicturePath,
+			Price:       productModel.Prices[0].Price,
+			Description: productModel.Description,
+			CreatedAt:   productModel.CreatedAt,
+		}
+
+		return nil
+	}))
+
+	return product
 }

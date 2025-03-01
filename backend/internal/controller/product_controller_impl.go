@@ -43,3 +43,15 @@ func (contr *ProductControllerImpl) UnitCreate(ctx *gin.Context) {
 	response := contr.Serv.UnitCreate(ctx.Request.Context(), request)
 	helper.Response(ctx, http.StatusCreated, "Created", response)
 }
+
+func (contr *ProductControllerImpl) GetProducts(ctx *gin.Context) {
+	response := contr.Serv.GetProducts(ctx.Request.Context())
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
+func (contr *ProductControllerImpl) GetProduct(ctx *gin.Context) {
+	productId := ctx.Params.ByName("productId")
+
+	response := contr.Serv.GetProduct(ctx.Request.Context(), productId)
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}

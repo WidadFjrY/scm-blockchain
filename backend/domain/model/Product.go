@@ -17,6 +17,12 @@ type Product struct {
 	UnitID      string `gorm:"not null"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+
+	Brand ProductBrand `gorm:"foreignKey:BrandID;references:ID"`
+	Unit  ProductUnit  `gorm:"foreignKey:UnitID;references:ID"`
+
+	Prices []ProductPrice `gorm:"foreignKey:ProductID"`
+	Stocks []ProductStock `gorm:"foreignKey:ProductID"`
 }
 
 type ProductBrand struct {
@@ -34,6 +40,8 @@ type ProductPrice struct {
 	ProductID string    `gorm:"type:char(15);not null"`
 	Price     float32   `gorm:"type:float;not null;default:0"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
+
+	Product Product `gorm:"foreignKey:ProductID;references:ID"`
 }
 
 type ProductStock struct {
@@ -43,4 +51,6 @@ type ProductStock struct {
 	StockOut   int       `gorm:"type:integer;default:0"`
 	StockTotal int       `gorm:"type:integer;not null"`
 	UpdatedAt  time.Time `gorm:"autoUpdateTime"`
+
+	Product Product `gorm:"foreignKey:ProductID;references:ID"`
 }

@@ -1,9 +1,8 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import ProductCard from '@/components/ProductCard.vue';
-import semenImg from '@/assets/img/semen.png';
 
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 
 import axios from 'axios';
 
@@ -11,6 +10,10 @@ const user = ref({
     name: "",
     ethAddr: "",
     role: "",
+})
+
+const state = reactive({
+    products: null,
 })
 
 const ethPrice = ref();
@@ -43,6 +46,16 @@ async function ETHPrice() {
     }
 }
 
+async function getAllPrduct() {
+    try {
+        const response = await axios.get(`${BASE_URL_BACKEND}/products`)
+        state.products = response.data.data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+getAllPrduct()
 ETHPrice()
 getDataUser()
 
@@ -57,8 +70,10 @@ getDataUser()
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
             </div>
         </div>
-        <ProductCard :img="semenImg" :productName="'Semen'" :stock="420" :unit="'Sak'" :brand="'Tiga Roda'"
-            :price="convertToETH(67000)" />
+        <div v-for="(product, index) in state.products" :key="index">
+            <ProductCard :img="`${BASE_URL_BACKEND}/${product.filepath}`" :productName="product.product_name"
+                :stock=product.stock :unit=product.unit :brand=product.brand :price="convertToETH(product.price)" />
+        </div>
     </div>
 </template>
 <style scoped>
