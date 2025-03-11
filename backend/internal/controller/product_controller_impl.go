@@ -8,6 +8,7 @@ import (
 	"scm-blockchain-ethereum/pkg/helper"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -114,4 +115,31 @@ func (contr *ProductControllerImpl) GetBrands(ctx *gin.Context) {
 func (contr *ProductControllerImpl) GetUnits(ctx *gin.Context) {
 	response := contr.Serv.GetUnits(ctx.Request.Context())
 	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
+func (contr *ProductControllerImpl) AddToCart(ctx *gin.Context) {
+	userId, _ := ctx.Get("user_id")
+
+	var request web.AddToCartRequest
+	helper.Err(ctx.ShouldBind(&request))
+
+	contr.Serv.AddToCart(ctx.Request.Context(), request, userId.(string))
+	helper.Response(ctx, http.StatusCreated, "Created", time.Now())
+}
+
+func (contr *ProductControllerImpl) GetCarts(ctx *gin.Context) {
+	userId, _ := ctx.Get("user_id")
+	response := contr.Serv.GetCarts(ctx.Request.Context(), userId.(string))
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
+func (contr *ProductControllerImpl) UpdateCartQty(ctx *gin.Context) {
+	productId := ctx.Query("product_id")
+	qty := ctx.Query("qty")
+
+	qtyInt, err := strconv.Atoi(qty)
+	helper.Err(err)
+
+	contr.Serv.UpdateCartQty(ctx.Request.Context(), productId, qtyInt)
+	helper.Response(ctx, http.StatusOK, "Ok", "")
 }

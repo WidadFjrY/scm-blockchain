@@ -14,11 +14,17 @@ func ProductRouter(router *gin.Engine, db *gorm.DB, contrl controller.ProductCon
 	auth.Use(middleware.Auth(db))
 	{
 		auth.POST("/api/product/add", contrl.ProductCreate)
-		auth.POST("/api/brand/add", contrl.BrandCreate)
-		auth.POST("/api/unit/add", contrl.UnitCreate)
-		auth.GET("/api/products", contrl.GetProducts)
 		auth.GET("/api/product/:productId", contrl.GetProduct)
+		auth.GET("/api/products", contrl.GetProducts)
+
+		auth.POST("/api/brand/add", contrl.BrandCreate)
 		auth.GET("/api/brands", contrl.GetBrands)
+
+		auth.POST("/api/unit/add", contrl.UnitCreate)
 		auth.GET("/api/units", contrl.GetUnits)
+
+		auth.POST("/api/addToCart", contrl.AddToCart)
+		auth.PUT("/api/cart", contrl.UpdateCartQty)
+		auth.GET("/api/cart", contrl.GetCarts)
 	}
 }

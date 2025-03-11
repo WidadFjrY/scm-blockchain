@@ -136,7 +136,6 @@ func (serv *ProductServiceImpl) GetProducts(ctx context.Context) []web.ProductRe
 				Description: product.Description,
 				CreatedAt:   product.CreatedAt,
 			})
-			fmt.Println(product)
 		}
 		return nil
 	}))
@@ -197,4 +196,52 @@ func (serv *ProductServiceImpl) GetUnits(ctx context.Context) []web.UnitResponse
 	}))
 
 	return units
+}
+
+func (serv *ProductServiceImpl) AddToCart(ctx context.Context, request web.AddToCartRequest, userId string) {
+	helper.ValError(serv.Validator.Struct(&request))
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.AddToCart(ctx, tx, model.Cart{
+			UserID:    userId,
+			ProductID: request.ProductId,
+			Quantity:  request.Quantity,
+		})
+		return nil
+	}))
+}
+
+func (serv *ProductServiceImpl) GetCarts(ctx context.Context, userId string) []web.CartResponse {
+	var Carts []web.CartResponse
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		for _, cart := range serv.Repo.GetCarts(ctx, tx, userId) {
+			Carts = append(Carts, web.CartResponse{
+				UserID:    cart.UserID,
+				ProductId: cart.ProductID,
+				Quantity:  cart.Quantity,
+				Product: web.ProductResponse{
+					ID:          cart.Product.ID,
+					ProductName: cart.Product.ProductName,
+					Price:       cart.Product.Prices[0].Price,
+					Brand:       cart.Product.Brand.Name,
+					Unit:        cart.Product.Unit.Name,
+					FilePath:    cart.Product.PicturePath,
+				},
+			})
+		}
+		return nil
+	}))
+
+	return Carts
+}
+
+func (serv *ProductServiceImpl) UpdateCartQty(ctx context.Context, productId string, qty int) {
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.UpdateCartQty(ctx, tx, model.Cart{
+			ProductID: productId,
+			Quantity:  qty,
+		})
+		return nil
+	}))
 }

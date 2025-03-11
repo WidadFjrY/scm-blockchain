@@ -57,3 +57,15 @@ type UnitCreateResponse struct {
 	UnitName  string    `json:"unit_name"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
+type AddToCartRequest struct {
+	ProductId string `json:"product_id" validate:"required"`
+	Quantity  int    `json:"quantity" validate:"required"`
+}
+
+type CartResponse struct {
+	UserID    string          `json:"user_id"`
+	ProductId string          `json:"product_id"`
+	Quantity  int             `json:"quantity"`
+	Product   ProductResponse `json:"product"`
+}

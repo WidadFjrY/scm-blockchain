@@ -1,5 +1,9 @@
 <script setup>
+
+import axios from 'axios';
+
 const props = defineProps({
+    productId: String,
     img: String,
     productName: String,
     unit: String,
@@ -7,6 +11,20 @@ const props = defineProps({
     brand: String,
     price: String,
 })
+
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
+
+async function addToCartHandle() {
+    try {
+        await axios.post(`${BACKEND_BASE_URL}/addToCart`, {
+            product_id: props.productId,
+            quantity: 1,
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 </script>
 <template>
     <div class="card">
@@ -23,7 +41,7 @@ const props = defineProps({
             <p class="price">{{ props.price }} ETH </p>
             <p>/{{ props.unit }}</p>
         </div>
-        <button>+ Keranjang</button>
+        <button @click.prevent="addToCartHandle">+ Keranjang</button>
     </div>
 </template>
 <style scoped>

@@ -38,7 +38,7 @@ async function registerHandle() {
 
         if (response.data.data) {
             const txReceipt = await userContract.methods
-                .registerUser(registerForm.value.name, "admin")
+                .registerUser(registerForm.value.name, "customer")
                 .send({ from: userAddress })
 
             if (!txReceipt.status) {

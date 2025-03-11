@@ -12,4 +12,8 @@ type ProductController interface {
 
 	GetBrands(ctx *gin.Context)
 	GetUnits(ctx *gin.Context)
+
+	AddToCart(ctx *gin.Context)
+	GetCarts(ctx *gin.Context)
+	UpdateCartQty(ctx *gin.Context)
 }

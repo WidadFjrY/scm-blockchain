@@ -15,4 +15,8 @@ type ProductService interface {
 
 	GetBrands(ctx context.Context) []web.BrandResponse
 	GetUnits(ctx context.Context) []web.UnitResponse
+
+	AddToCart(ctx context.Context, request web.AddToCartRequest, userId string)
+	GetCarts(ctx context.Context, userId string) []web.CartResponse
+	UpdateCartQty(ctx context.Context, productId string, qty int)
 }

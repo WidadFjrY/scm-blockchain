@@ -147,9 +147,9 @@ watch(
                 <tr>
                     <th>No</th>
                     <th>Nama Produk</th>
+                    <th>Merek</th>
                     <th>Stok</th>
                     <th>Harga</th>
-                    <th>Satuan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -157,9 +157,9 @@ watch(
                 <tr v-for="(product, index) in state.filteredProducts" :key="product.id">
                     <td>{{ index + 1 }}</td>
                     <td>{{ product.product_name }}</td>
+                    <td>{{ product.brand }}</td>
                     <td>{{ product.stock }}</td>
                     <td>Rp. {{ product.price.toLocaleString("id-ID") }}</td>
-                    <td>{{ product.unit }}</td>
                     <td style="display: flex; justify-content: center;"><button
                             @click.prevent="getProductById(product.id)">Lihat
                             Detail</button></td>

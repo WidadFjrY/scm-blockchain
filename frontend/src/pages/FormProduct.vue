@@ -87,7 +87,7 @@ async function addProductHandle() {
 
         if (response.status === 201) {
             const txReceipt = await userContract.methods
-                .addProduct(response.data.data.product_id, web3.utils.keccak256(`${formProduct.value.product_name, formProduct.value.brand_id, formProduct.value.unit_id}`))
+                .addProduct(response.data.data.product_id, formProduct.value.product_name, web3.utils.keccak256(`${formProduct.value.product_name, formProduct.value.brand_id, formProduct.value.unit_id}`))
                 .send({ from: userAddress })
 
             if (!txReceipt.status) {

@@ -7,6 +7,7 @@ import Order from "@/pages/OrderPage.vue";
 import Report from "@/pages/ReportPage.vue";
 import User from "@/pages/UserPage.vue";
 import FormProduct from "@/pages/FormProduct.vue";
+import Cart from "@/pages/CartPage.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -17,6 +18,7 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/", name: "Home", component: Home },
+  { path: "/cart", name: "Cart", component: Cart },
   {
     path: "/dashboard",
     name: "Dashboard",

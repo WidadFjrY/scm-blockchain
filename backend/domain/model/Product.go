@@ -54,3 +54,13 @@ type ProductStock struct {
 
 	Product Product `gorm:"foreignKey:ProductID;references:ID"`
 }
+
+type Cart struct {
+	UserID    string    `gorm:"primaryKey;type:char(15);not null"`
+	ProductID string    `gorm:"primaryKey;type:char(15);not null"`
+	Quantity  int       `gorm:"not null"`
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
+
+	Product Product `gorm:"foreignKey:ProductID;references:ID"`
+}

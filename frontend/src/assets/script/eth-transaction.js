@@ -3,7 +3,7 @@ import UserContractABI from "../../../../ethereum/build/contracts/SupplyChainCon
 
 let web3;
 let userContract;
-const contractAddress = "0xF6Cd825d5e918891C7e52cbD3bB4390C19fD1874";
+const contractAddress = "0x2d17043d2dF2fDF2cE295071DbEc81a6A118d6b0";
 
 if (window.ethereum) {
   web3 = new Web3(window.ethereum);

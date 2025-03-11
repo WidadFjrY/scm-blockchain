@@ -72,8 +72,9 @@ getDataUser()
         </div>
         <div class="card-container">
             <div v-for="(product, index) in state.products" :key="index">
-                <ProductCard :img="`${BACKEND_BASE_URL}/${product.filepath}`" :productName="product.product_name"
-                    :stock=product.stock :unit=product.unit :brand=product.brand :price="convertToETH(product.price)" />
+                <ProductCard :img="`${BACKEND_BASE_URL}/${product.filepath}`" :productId="product.id"
+                    :productName="product.product_name" :stock=product.stock :unit=product.unit :brand=product.brand
+                    :price="convertToETH(product.price)" />
             </div>
         </div>
     </div>

@@ -7,6 +7,7 @@ import (
 	"scm-blockchain-ethereum/pkg/exception"
 	"scm-blockchain-ethereum/pkg/helper"
 	"strings"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -49,12 +50,10 @@ func (repo *ProductRepositoryImpl) GetProducts(ctx context.Context, tx *gorm.DB)
 		Preload("Brand").
 		Preload("Unit").
 		Preload("Prices", func(db *gorm.DB) *gorm.DB {
-			return db.Where("updated_at = (?)",
-				db.Select("MAX(updated_at)").Table("product_prices").Where("product_prices.product_id = product_prices.product_id"))
+			return db.Order("updated_at DESC")
 		}).
 		Preload("Stocks", func(db *gorm.DB) *gorm.DB {
-			return db.Where("updated_at = (?)",
-				db.Select("MAX(updated_at)").Table("product_stocks").Where("product_stocks.product_id = product_stocks.product_id"))
+			return db.Order("updated_at DESC")
 		}).
 		Find(&products).Error)
 
@@ -89,4 +88,27 @@ func (repo *ProductRepositoryImpl) GetUnits(ctx context.Context, tx *gorm.DB) []
 
 	helper.Err(tx.WithContext(ctx).Find(&units).Error)
 	return units
+}
+
+func (repo *ProductRepositoryImpl) AddToCart(ctx context.Context, tx *gorm.DB, cart model.Cart) {
+	helper.Err(tx.WithContext(ctx).Create(&cart).Error)
+}
+
+func (repo *ProductRepositoryImpl) DeleteItemCart(ctx context.Context, tx *gorm.DB, cartId string) {
+	helper.Err(tx.WithContext(ctx).Table("carts").Delete(nil).Where("id = ?", cartId).Error)
+}
+
+func (repo *ProductRepositoryImpl) GetCarts(ctx context.Context, tx *gorm.DB, userId string) []model.Cart {
+	var carts []model.Cart
+	helper.Err(tx.WithContext(ctx).Where("user_id = ?", userId).Preload("Product").Preload("Product.Prices", func(db *gorm.DB) *gorm.DB {
+		return db.Order("updated_at DESC")
+	}).Preload("Product.Brand").Preload("Product.Unit").Find(&carts).Error)
+	return carts
+}
+
+func (repo *ProductRepositoryImpl) UpdateCartQty(ctx context.Context, tx *gorm.DB, cart model.Cart) {
+	helper.Err(tx.WithContext(ctx).Where("product_id = ?", cart.ProductID).Table("carts").Updates(map[string]interface{}{
+		"quantity":   cart.Quantity,
+		"updated_at": time.Now(),
+	}).Error)
 }
