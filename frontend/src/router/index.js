@@ -8,6 +8,7 @@ import Report from "@/pages/ReportPage.vue";
 import User from "@/pages/UserPage.vue";
 import FormProduct from "@/pages/FormProduct.vue";
 import Cart from "@/pages/CartPage.vue";
+import Tracking from "@/pages/TrackingPage.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -19,6 +20,7 @@ const routes = [
   { path: "/register", name: "Register", component: Register },
   { path: "/", name: "Home", component: Home },
   { path: "/cart", name: "Cart", component: Cart },
+  { path: "/tracking", name: "Tracking", component: Tracking },
   {
     path: "/dashboard",
     name: "Dashboard",

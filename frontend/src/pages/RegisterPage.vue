@@ -2,7 +2,7 @@
 
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { web3, userContract } from '@/assets/script/eth-transaction.js'
+import { web3, SupplyChainContract } from '@/assets/script/eth-transaction.js'
 
 import axios from 'axios'
 import Cookies from 'js-cookie'
@@ -37,7 +37,7 @@ async function registerHandle() {
         })
 
         if (response.data.data) {
-            const txReceipt = await userContract.methods
+            const txReceipt = await SupplyChainContract.methods
                 .registerUser(registerForm.value.name, "customer")
                 .send({ from: userAddress })
 

@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { web3, userContract } from '@/assets/script/eth-transaction.js'
+import { web3, SupplyChainContract } from '@/assets/script/eth-transaction.js'
 
 import { reactive, watch, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -52,7 +52,7 @@ async function addUser() {
         })
 
         if (response.data.data) {
-            const txReceipt = await userContract.methods
+            const txReceipt = await SupplyChainContract.methods
                 .registerUserWithAdmin(registerForm.value.name, registerForm.value.role.toLowerCase(), registerForm.value.eth_address)
                 .send({ from: userAddress })
 

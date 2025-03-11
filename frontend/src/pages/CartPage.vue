@@ -1,7 +1,7 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 
-import { web3, userContract } from '@/assets/script/eth-transaction.js'
+import { web3, SupplyChainContract } from '@/assets/script/eth-transaction.js'
 import { ref, reactive } from 'vue';
 
 import axios from 'axios';
@@ -78,7 +78,7 @@ async function checkOutHandle() {
     try {
         const valueInWei = web3.utils.toWei(convertToETH(totalPrice()).toString(), 'ether');
         console.log(valueInWei)
-        const tx = await userContract.methods
+        const tx = await SupplyChainContract.methods
             .createTransaction(productIds, quantities)
             .send({ from: userAddress, value: valueInWei });
 

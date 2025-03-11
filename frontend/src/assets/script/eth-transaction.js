@@ -1,9 +1,9 @@
 import Web3 from "web3";
-import UserContractABI from "../../../../ethereum/build/contracts/SupplyChainContract.json"; // Sesuaikan path ke ABI
+import SupplyChainContractABI from "../../../../ethereum/build/contracts/SupplyChainContract.json"; // Sesuaikan path ke ABI
 
 let web3;
-let userContract;
-const contractAddress = "0x2d17043d2dF2fDF2cE295071DbEc81a6A118d6b0";
+let SupplyChainContract;
+const contractAddress = "0xfce5F02cD5b7AC10167FA1BB0be249328e07633C";
 
 if (window.ethereum) {
   web3 = new Web3(window.ethereum);
@@ -12,6 +12,9 @@ if (window.ethereum) {
   console.error("Metamask tidak terdeteksi");
 }
 
-userContract = new web3.eth.Contract(UserContractABI.abi, contractAddress);
+SupplyChainContract = new web3.eth.Contract(
+  SupplyChainContractABI.abi,
+  contractAddress
+);
 
-export { web3, userContract };
+export { web3, SupplyChainContract };

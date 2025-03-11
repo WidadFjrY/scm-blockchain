@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import { web3, userContract } from '../assets/script/eth-transaction';
+import { web3, SupplyChainContract } from '../assets/script/eth-transaction';
 
 import SideBar from '@/components/SideBar.vue';
 import NavBarDash from '@/components/NavBarDash.vue';
@@ -86,7 +86,7 @@ async function addProductHandle() {
         })
 
         if (response.status === 201) {
-            const txReceipt = await userContract.methods
+            const txReceipt = await SupplyChainContract.methods
                 .addProduct(response.data.data.product_id, formProduct.value.product_name, web3.utils.keccak256(`${formProduct.value.product_name, formProduct.value.brand_id, formProduct.value.unit_id}`))
                 .send({ from: userAddress })
 

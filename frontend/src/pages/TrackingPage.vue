@@ -1,79 +1,100 @@
 <script setup>
+import NavBar from '@/components/NavBar.vue';
+
 import { web3, SupplyChainContract } from '@/assets/script/eth-transaction.js'
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
+
 import axios from 'axios';
 
-import SideBar from '@/components/SideBar.vue';
-import NavBarDash from '@/components/NavBarDash.vue';
-
-import { useRouter, useRoute } from 'vue-router';
-
-const route = useRoute()
-
-const transactionsArray = ref([]);
-const products = ref([]);
+const user = ref({})
+const transactionsArray = ref([])
+const products = ref([])
 const groupedTransactions = ref([]);
-const user = ref({
-    name: "",
-    ethAddr: "",
-    role: "",
-})
 
+const ethPrice = ref();
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
+
+const convertToETH = (idrPrice) => {
+    return ethPrice.value ? (idrPrice / ethPrice.value).toFixed(6) : "Loading...";
+};
 
 async function getDataUser() {
     try {
         const response = await axios.get(`${BACKEND_BASE_URL}/user`)
-        user.value.name = response.data.data.name
-        user.value.ethAddr = response.data.data.eth_addr
-        user.value.role = response.data.data.role
+        user.value = response.data.data
     } catch (error) {
         console.log(error)
     }
 
 }
 
-async function getAllPendingTransactions() {
+async function ETHPrice() {
     try {
-        const transactions = await SupplyChainContract.methods.getAllPendingTransactions().call();
+        const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=idr");
+        ethPrice.value = response.data.ethereum.idr;
+    } catch (error) {
+        ethPrice.value = "loading..."
+        console.log(error)
+    }
+}
 
-        const productPromises = []; // Array untuk menyimpan semua promise getProduct
+async function getUserTransactions() {
+    const account = await web3.eth.getAccounts();
+    const userAddress = account[0];
+
+    try {
+        const transactions = await SupplyChainContract.methods
+            .getTransactionsByBuyer(userAddress)
+            .call();
+
+        const productPromises = [];
 
         for (let i = 0; i < transactions.length; i++) {
             transactionsArray.value.push({
                 id: transactions[i][0],
                 buyer: transactions[i][1],
                 productIds: transactions[i][2],
-                quantities: transactions[i][3].map(qty => Number(qty).toLocaleString()),
+                quantities: transactions[i][3][0].toLocaleString(),
                 totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
                 timestamp: new Date(Number(transactions[i][5]) * 1000).toLocaleString(),
                 status: transactions[i][6]
             });
 
-            transactionsArray.value[i].productIds.forEach(productId => {
+            transactions[i][2].forEach(productId => {
                 productPromises.push(getProduct(transactions[i][0], productId));
             });
         }
 
-        console.log(transactionsArray.value);
-
         await Promise.all(productPromises);
-
         groupTransactions();
-
     } catch (error) {
-        console.error("Gagal mengambil transaksi yang belum selesai:", error);
+        console.error("Gagal mengambil transaksi:", error);
     }
 }
 
 
 async function getProduct(trxId, productId) {
     try {
-        const response = await axios.get(`${BACKEND_BASE_URL}/product/${productId}`);
-        products.value.push({ trxId: trxId, data: response.data.data });
-
+        const response = await axios.get(`${BACKEND_BASE_URL}/product/${productId}`)
+        products.value.push({ trxId: trxId, data: response.data.data })
     } catch (error) {
-        console.log(error);
+        console.log(error)
+        return {}
+    }
+}
+
+function getStatusClass(status) {
+    switch (status) {
+        case 'Pending':
+            return 'pending';
+        case 'Proses':
+            return 'proses';
+        case 'Pengiriman':
+            return 'pengiriman';
+        case 'Selesai':
+            return 'selesai';
+        default:
+            return '';
     }
 }
 
@@ -97,33 +118,25 @@ const groupTransactions = () => {
     }, {}));
 
     groupedTransactions.value = result;
-};
-
-function getStatusClass(status) {
-    switch (status) {
-        case 'Pending':
-            return 'pending';
-        case 'Proses':
-            return 'proses';
-        case 'Pengiriman':
-            return 'pengiriman';
-        case 'Selesai':
-            return 'selesai';
-        default:
-            return '';
-    }
 }
 
+
+
+getUserTransactions()
+ETHPrice()
 getDataUser()
-getAllPendingTransactions();
 
 </script>
-
 <template>
-    <SideBar></SideBar>
-
+    <NavBar :name="user.name" :ethAddr="user.eth_addr" :role="user.role"></NavBar>
     <div class="container">
-        <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
+        <div class="head">
+            <h1>Lacak Pesanan</h1>
+            <div style="display: flex; align-items: center;">
+                <img src="@/assets/img/eth-logo.png" width="50">
+                <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
+            </div>
+        </div>
         <div class="card-container">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product">
                 <div style="display: flex; align-items: center; gap:2rem">
@@ -144,33 +157,36 @@ getAllPendingTransactions();
             </div>
         </div>
     </div>
-
 </template>
-
 <style scoped>
 .container {
-    padding: 2rem;
-    margin-left: 25%;
-}
-
-.card-container {
     background-color: white;
+    margin: 2rem;
     padding: 2rem;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 1rem;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-
 }
 
-.card-product {
-    margin-top: 1rem;
+
+.container .card-container {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
 }
 
-.card-product:first-child {
-    margin-top: 0 !important;
+.card-product {
+    display: flex;
+    align-items: center;
+    margin: 0 5rem;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .card-img {
