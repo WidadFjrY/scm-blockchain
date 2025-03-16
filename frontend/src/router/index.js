@@ -9,6 +9,7 @@ import User from "@/pages/UserPage.vue";
 import FormProduct from "@/pages/FormProduct.vue";
 import Cart from "@/pages/CartPage.vue";
 import Tracking from "@/pages/TrackingPage.vue";
+import TransactionHistory from "@/pages/TransactionHistoryPage.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -21,6 +22,11 @@ const routes = [
   { path: "/", name: "Home", component: Home },
   { path: "/cart", name: "Cart", component: Cart },
   { path: "/tracking", name: "Tracking", component: Tracking },
+  {
+    path: "/transaction-history",
+    name: "Transaction History",
+    component: TransactionHistory,
+  },
   {
     path: "/dashboard",
     name: "Dashboard",

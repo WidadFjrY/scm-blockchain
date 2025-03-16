@@ -91,6 +91,13 @@ func (contr *UserControllerImpl) GetUserById(ctx *gin.Context) {
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
 
+func (contr *UserControllerImpl) GetUserByETHAddr(ctx *gin.Context) {
+	ethAddr := ctx.Params.ByName("addr")
+
+	response := contr.UserServ.GetUserByETHAddr(ctx.Request.Context(), ethAddr)
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
 /*
 func (contr *UserControllerImpl) GetUserByManager(ctx *gin.Context) {
 	role, _ := ctx.Get("role")

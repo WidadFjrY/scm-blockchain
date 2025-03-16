@@ -46,7 +46,7 @@ async function getUserTransactions() {
 
     try {
         const transactions = await SupplyChainContract.methods
-            .getTransactionsByBuyer(userAddress)
+            .getTransactionsDoneByBuyer(userAddress)
             .call();
 
         const productPromises = [];
@@ -131,7 +131,7 @@ getDataUser()
     <NavBar :name="user.name" :ethAddr="user.eth_addr" :role="user.role"></NavBar>
     <div class="container">
         <div class="head">
-            <h1>Lacak Pesanan</h1>
+            <h1>Riwayat Transaksi</h1>
             <div style="display: flex; align-items: center;">
                 <img src="@/assets/img/eth-logo.png" width="50">
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>

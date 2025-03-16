@@ -31,7 +31,7 @@ async function logoutHandle() {
             <h1>CV. Sindang Agung Jaya</h1>
         </div>
         <ul>
-            <li><router-link to="/transaction-hisoty">Riwayat Transasksi</router-link></li>
+            <li><router-link to="/transaction-history">Riwayat Transasksi</router-link></li>
             <li><router-link to="/tracking">Lacak Pesanan</router-link></li>
             <li><router-link to="/cart">Keranjang</router-link></li>
             <li v-if="props.role === 'Admin' || props.role === 'Warehouse_Staff'"><router-link

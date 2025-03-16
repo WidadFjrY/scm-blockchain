@@ -11,6 +11,7 @@ type UserController interface {
 	GetUserByIdToken(ctx *gin.Context)
 	GetUserById(ctx *gin.Context)
 	GetAll(ctx *gin.Context)
+	GetUserByETHAddr(ctx *gin.Context)
 	// GetUserByManager(ctx *gin.Context)
 	// UpdateById(ctx *gin.Context)
 	// UpdatePasswordById(ctx *gin.Context)

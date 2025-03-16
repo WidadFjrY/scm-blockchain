@@ -20,6 +20,7 @@ func UserRouter(router *gin.Engine, db *gorm.DB, contrl controller.UserControlle
 		auth.GET("/api/user", contrl.GetUserByIdToken)
 		auth.GET("/api/user/:user_id", contrl.GetUserById)
 		auth.GET("/api/users", contrl.GetAll)
+		auth.GET("/api/user/eth_addr/:addr", contrl.GetUserByETHAddr)
 		// 	auth.GET("/api/users/manager", contrl.GetUserByManager)
 		// 	auth.PUT("/api/user", contrl.UpdateById)
 		// 	auth.PUT("/api/user/password", contrl.UpdatePasswordById)

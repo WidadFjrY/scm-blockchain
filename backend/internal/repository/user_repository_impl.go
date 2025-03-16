@@ -105,3 +105,15 @@ func (repo *UserRepositoryImpl) UpdatePassword(ctx context.Context, tx *gorm.DB,
 
 	helper.Err(err)
 }
+
+func (repo *UserRepositoryImpl) GetUserByETHAddr(ctx context.Context, tx *gorm.DB, addr string) model.User {
+	var user model.User
+
+	result := tx.WithContext(ctx).Where("eth_address = ?", addr).First(&user)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		panic(exception.NewNotFoundError(fmt.Sprintf("user with id %s not found", addr)))
+	}
+
+	helper.Err(result.Error)
+	return user
+}

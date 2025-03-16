@@ -269,6 +269,36 @@ contract SupplyChainContract {
 
         return result;
     }
+    function getTransactionsDoneByBuyer(
+        address _buyer
+    ) public view returns (Transaction[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 1; i <= transactionCounter; i++) {
+            if (
+                transactions[i].buyer == _buyer &&
+                keccak256(abi.encodePacked(transactions[i].status)) ==
+                keccak256(abi.encodePacked("Selesai"))
+            ) {
+                count++;
+            }
+        }
+
+        Transaction[] memory result = new Transaction[](count);
+        uint256 index = 0;
+
+        for (uint256 i = 1; i <= transactionCounter; i++) {
+            if (
+                transactions[i].buyer == _buyer &&
+                keccak256(abi.encodePacked(transactions[i].status)) ==
+                keccak256(abi.encodePacked("Selesai"))
+            ) {
+                result[index] = transactions[i];
+                index++;
+            }
+        }
+
+        return result;
+    }
 
     function getAllPendingTransactions()
         public

@@ -198,6 +198,26 @@ func (serv *UserServiceImpl) GetAll(ctx context.Context) []web.UserGetResponse {
 	return users
 }
 
+func (serv *UserServiceImpl) GetUserByETHAddr(ctx context.Context, addr string) web.UserGetResponse {
+	var user model.User
+	txErr := serv.DB.Transaction(func(tx *gorm.DB) error {
+		user = serv.UserRepo.GetUserByETHAddr(ctx, tx, addr)
+		return nil
+	})
+	helper.Err(txErr)
+
+	return web.UserGetResponse{
+		ID:         user.ID,
+		Name:       user.Name,
+		ETHAddress: helper.HideAddress(user.ETHAddress),
+		Email:      user.Email,
+		Role:       user.Role,
+		Telp:       user.Telp,
+		CreatedAt:  user.CreatedAt,
+		UpdatedAt:  user.UpdatedAt,
+	}
+}
+
 /*
 				func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) []web.UserGetResponse {
 	var users []web.UserGetResponse

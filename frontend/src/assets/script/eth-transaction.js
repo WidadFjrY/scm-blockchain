@@ -3,7 +3,7 @@ import SupplyChainContractABI from "../../../../ethereum/build/contracts/SupplyC
 
 let web3;
 let SupplyChainContract;
-const contractAddress = "0xfce5F02cD5b7AC10167FA1BB0be249328e07633C";
+const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 if (window.ethereum) {
   web3 = new Web3(window.ethereum);
