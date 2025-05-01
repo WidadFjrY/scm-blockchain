@@ -51,15 +51,15 @@ async function getAllPendingTransactions() {
                 productIds: transactions[i][2],
                 quantities: transactions[i][3].map(qty => Number(qty).toLocaleString()),
                 totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
-                timestamp: new Date(Number(transactions[i][5]) * 1000).toLocaleString(),
-                status: transactions[i][6]
+                shippingAddress: transactions[i][5],
+                timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
+                status: transactions[i][7]
             });
 
             transactionsArray.value[i].productIds.forEach(productId => {
                 productPromises.push(getProduct(transactions[i][0], productId));
             });
         }
-
 
         await Promise.all(productPromises);
 
@@ -134,18 +134,7 @@ async function updateHandle(transactionId) {
 }
 
 function getStatusClass(status) {
-    switch (status) {
-        case 'Pending':
-            return 'pending';
-        case 'Proses':
-            return 'proses';
-        case 'Pengiriman':
-            return 'pengiriman';
-        case 'Selesai':
-            return 'selesai';
-        default:
-            return '';
-    }
+    return status.toLowerCase()
 }
 
 getDataUser()
@@ -168,22 +157,27 @@ getAllPendingTransactions();
                     <p>{{ userTrx.name }}</p>
                     <h3>Alamat ETH</h3>
                     <p>{{ transactionsArray[selectedTransactionIndex].buyer }}</p>
-                    <div style="border-top: 1px solid grey; width: 100%; margin-top: 1rem"></div>
-                    <div v-for="(product, index) in selectedTransaction.products" :key="index">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h3>Nama Produk</h3>
-                                <p>{{ product.data.product_name }}</p>
-                                <h3>Banyaknya</h3>
-                                <p>{{ `${transactionsArray[selectedTransactionIndex].quantities[index]}
-                                    ${product.data.unit}` }}
-                                </p>
+                    <h3>Alamat Pengiriman</h3>
+                    <p>{{ transactionsArray[selectedTransactionIndex].shippingAddress }}</p>
+                    <h3>Produk:</h3>
+                    <div style="max-height: 350px; overflow-y: auto;">
+                        <div v-for="(product, index) in selectedTransaction.products" :key="index">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3>Nama Produk</h3>
+                                    <p>{{ product.data.product_name }}</p>
+                                    <h3>Banyaknya</h3>
+                                    <p>{{ `${transactionsArray[selectedTransactionIndex].quantities[index]}
+                                        ${product.data.unit}` }}
+                                    </p>
+                                </div>
+                                <div class="card">
+                                    <img :src="`${BACKEND_BASE_URL}/${product.data.filepath}`" width="100" alt="">
+                                </div>
                             </div>
-                            <div class="card">
-                                <img :src="`${BACKEND_BASE_URL}/${product.data.filepath}`" width="100" alt="">
-                            </div>
+                            <div style="border-top: 1px solid grey; width: 100%; margin-top: 1rem"></div>
+
                         </div>
-                        <div style="border-top: 1px solid grey; width: 100%; margin-top: 1rem"></div>
                     </div>
 
                 </div>
@@ -285,19 +279,19 @@ p {
 }
 
 .pending {
-    color: orange;
+    color: #F59E0B;
 }
 
 .proses {
-    color: blue;
+    color: #3B82F6;
 }
 
 .pengiriman {
-    color: purple;
+    color: #8B5CF6;
 }
 
 .selesai {
-    color: green;
+    color: #10B981;
 }
 
 

@@ -54,3 +54,7 @@ type UserUpdatePasswordRequest struct {
 	NewPassword    string `json:"new_password" validate:"required,min=8"`
 	VerifyPassword string `json:"verify_password" validate:"required,min=8"`
 }
+
+type GetCountUserResponse struct {
+	TotalUser int64 `json:"total_user"`
+}

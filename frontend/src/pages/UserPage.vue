@@ -253,8 +253,8 @@ table td {
 
 table button {
     padding: 1rem;
-    border-radius: 1rem;
-    font-size: 1.3rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
     background-color: rgb(32, 193, 243);
     color: white;
     border: none;

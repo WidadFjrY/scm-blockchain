@@ -13,6 +13,7 @@ type UserService interface {
 	GetUserById(ctx context.Context, userId string) web.UserGetResponse
 	GetAll(ctx context.Context) []web.UserGetResponse
 	GetUserByETHAddr(ctx context.Context, addr string) web.UserGetResponse
+	GetCountUser(ctx context.Context) web.GetCountUserResponse
 	// GetUserByManager(ctx context.Context, role string) []web.UserGetResponse
 	// UpdateById(ctx context.Context, request web.UserUpdateRequest, userId string) time.Time
 	// UpdatePassword(ctx context.Context, request web.UserUpdatePasswordRequest, userId string) time.Time

@@ -12,6 +12,9 @@ type ProductService interface {
 
 	GetProducts(ctx context.Context) []web.ProductResponse
 	GetProduct(ctx context.Context, productId string) web.ProductResponse
+	GetTotalProduct(ctx context.Context) web.GetTotalProductResponse
+
+	DeleteProductById(ctx context.Context, productId string)
 
 	GetBrands(ctx context.Context) []web.BrandResponse
 	GetUnits(ctx context.Context) []web.UnitResponse
@@ -19,4 +22,5 @@ type ProductService interface {
 	AddToCart(ctx context.Context, request web.AddToCartRequest, userId string)
 	GetCarts(ctx context.Context, userId string) []web.CartResponse
 	UpdateCartQty(ctx context.Context, productId string, qty int)
+	DeleteItemCart(ctx context.Context, productId string)
 }

@@ -76,6 +76,14 @@ func (repo *ProductRepositoryImpl) GetProduct(ctx context.Context, tx *gorm.DB, 
 	return product
 }
 
+func (repo *ProductRepositoryImpl) DeleteProductById(ctx context.Context, tx *gorm.DB, productId string) {
+	tables := []string{"product_prices", "product_stocks", "carts"}
+	for _, table := range tables {
+		helper.Err(tx.WithContext(ctx).Table(table).Where("product_id = ?", productId).Delete(nil).Error)
+	}
+	helper.Err(tx.WithContext(ctx).Table("products").Where("id = ?", productId).Delete(nil).Error)
+}
+
 func (repo *ProductRepositoryImpl) GetBrands(ctx context.Context, tx *gorm.DB) []model.ProductBrand {
 	var brands []model.ProductBrand
 
@@ -94,13 +102,15 @@ func (repo *ProductRepositoryImpl) AddToCart(ctx context.Context, tx *gorm.DB, c
 	helper.Err(tx.WithContext(ctx).Create(&cart).Error)
 }
 
-func (repo *ProductRepositoryImpl) DeleteItemCart(ctx context.Context, tx *gorm.DB, cartId string) {
-	helper.Err(tx.WithContext(ctx).Table("carts").Delete(nil).Where("id = ?", cartId).Error)
+func (repo *ProductRepositoryImpl) DeleteItemCart(ctx context.Context, tx *gorm.DB, productId string) {
+	helper.Err(tx.WithContext(ctx).Where("product_id = ?", productId).Table("carts").Delete(nil).Error)
 }
 
 func (repo *ProductRepositoryImpl) GetCarts(ctx context.Context, tx *gorm.DB, userId string) []model.Cart {
 	var carts []model.Cart
 	helper.Err(tx.WithContext(ctx).Where("user_id = ?", userId).Preload("Product").Preload("Product.Prices", func(db *gorm.DB) *gorm.DB {
+		return db.Order("updated_at DESC")
+	}).Preload("Product.Stocks", func(db *gorm.DB) *gorm.DB {
 		return db.Order("updated_at DESC")
 	}).Preload("Product.Brand").Preload("Product.Unit").Find(&carts).Error)
 	return carts
@@ -111,4 +121,11 @@ func (repo *ProductRepositoryImpl) UpdateCartQty(ctx context.Context, tx *gorm.D
 		"quantity":   cart.Quantity,
 		"updated_at": time.Now(),
 	}).Error)
+}
+
+func (repo *ProductRepositoryImpl) GetTotalProducts(ctx context.Context, tx *gorm.DB) int64 {
+	var totalProducts int64
+
+	helper.Err(tx.WithContext(ctx).Table("products").Count(&totalProducts).Error)
+	return totalProducts
 }

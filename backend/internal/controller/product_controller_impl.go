@@ -107,6 +107,18 @@ func (contr *ProductControllerImpl) GetProduct(ctx *gin.Context) {
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
 
+func (contr *ProductControllerImpl) GetTotalProduct(ctx *gin.Context) {
+	response := contr.Serv.GetTotalProduct(ctx.Request.Context())
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
+func (contr *ProductControllerImpl) DeleteProductById(ctx *gin.Context) {
+	productId := ctx.Params.ByName("productId")
+
+	contr.Serv.DeleteProductById(ctx.Request.Context(), productId)
+	helper.Response(ctx, http.StatusOK, "Ok", "")
+}
+
 func (contr *ProductControllerImpl) GetBrands(ctx *gin.Context) {
 	response := contr.Serv.GetBrands(ctx.Request.Context())
 	helper.Response(ctx, http.StatusOK, "Ok", response)
@@ -141,5 +153,11 @@ func (contr *ProductControllerImpl) UpdateCartQty(ctx *gin.Context) {
 	helper.Err(err)
 
 	contr.Serv.UpdateCartQty(ctx.Request.Context(), productId, qtyInt)
+	helper.Response(ctx, http.StatusOK, "Ok", "")
+}
+
+func (contr *ProductControllerImpl) DeleteItemCart(ctx *gin.Context) {
+	productId := ctx.Params.ByName("product_id")
+	contr.Serv.DeleteItemCart(ctx.Request.Context(), productId)
 	helper.Response(ctx, http.StatusOK, "Ok", "")
 }

@@ -17,7 +17,6 @@ const state = reactive({
 })
 
 const ethPrice = ref();
-const count = ref(0)
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
 const convertToETH = (idrPrice) => {
@@ -74,7 +73,7 @@ getDataUser()
             <div v-for="(product, index) in state.products" :key="index">
                 <ProductCard :img="`${BACKEND_BASE_URL}/${product.filepath}`" :productId="product.id"
                     :productName="product.product_name" :stock=product.stock :unit=product.unit :brand=product.brand
-                    :price="convertToETH(product.price)" />
+                    :price="convertToETH(product.price)" :priceInIdr=product.price />
             </div>
         </div>
     </div>

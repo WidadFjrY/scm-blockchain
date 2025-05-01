@@ -58,8 +58,8 @@ async function getUserTransactions() {
                 productIds: transactions[i][2],
                 quantities: transactions[i][3][0].toLocaleString(),
                 totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
-                timestamp: new Date(Number(transactions[i][5]) * 1000).toLocaleString(),
-                status: transactions[i][6]
+                timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
+                status: transactions[i][7]
             });
 
             transactions[i][2].forEach(productId => {
@@ -74,7 +74,6 @@ async function getUserTransactions() {
     }
 }
 
-
 async function getProduct(trxId, productId) {
     try {
         const response = await axios.get(`${BACKEND_BASE_URL}/product/${productId}`)
@@ -86,18 +85,7 @@ async function getProduct(trxId, productId) {
 }
 
 function getStatusClass(status) {
-    switch (status) {
-        case 'Pending':
-            return 'pending';
-        case 'Proses':
-            return 'proses';
-        case 'Pengiriman':
-            return 'pengiriman';
-        case 'Selesai':
-            return 'selesai';
-        default:
-            return '';
-    }
+    return status.toLowerCase()
 }
 
 const groupTransactions = () => {
@@ -137,7 +125,7 @@ getDataUser()
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
             </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" v-if="groupedTransactions">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product">
                 <div style="display: flex; align-items: center; gap:2rem">
                     <div class="card-img">
@@ -155,6 +143,9 @@ getDataUser()
                 </div>
                 <h1 :class="getStatusClass(transactionsArray[index].status)">{{ transactionsArray[index].status }}</h1>
             </div>
+        </div>
+        <div class="card-container" v-else>
+            <h2 style="text-align: center; width: 100%;">Tidak ada transaksi</h2>
         </div>
     </div>
 </template>
@@ -206,18 +197,18 @@ p {
 }
 
 .pending {
-    color: orange;
+    color: #F59E0B;
 }
 
 .proses {
-    color: blue;
+    color: #3B82F6;
 }
 
 .pengiriman {
-    color: purple;
+    color: #8B5CF6;
 }
 
 .selesai {
-    color: green;
+    color: #10B981;
 }
 </style>

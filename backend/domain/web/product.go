@@ -69,3 +69,7 @@ type CartResponse struct {
 	Quantity  int             `json:"quantity"`
 	Product   ProductResponse `json:"product"`
 }
+
+type GetTotalProductResponse struct {
+	TotalProduct int64 `json:"total_product"`
+}

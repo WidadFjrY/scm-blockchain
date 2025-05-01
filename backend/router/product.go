@@ -16,6 +16,8 @@ func ProductRouter(router *gin.Engine, db *gorm.DB, contrl controller.ProductCon
 		auth.POST("/api/product/add", contrl.ProductCreate)
 		auth.GET("/api/product/:productId", contrl.GetProduct)
 		auth.GET("/api/products", contrl.GetProducts)
+		auth.DELETE("/api/product/:productId", contrl.DeleteProductById)
+		auth.GET("/api/product/count", contrl.GetTotalProduct)
 
 		auth.POST("/api/brand/add", contrl.BrandCreate)
 		auth.GET("/api/brands", contrl.GetBrands)
@@ -26,5 +28,6 @@ func ProductRouter(router *gin.Engine, db *gorm.DB, contrl controller.ProductCon
 		auth.POST("/api/addToCart", contrl.AddToCart)
 		auth.PUT("/api/cart", contrl.UpdateCartQty)
 		auth.GET("/api/cart", contrl.GetCarts)
+		auth.DELETE("/api/cart/:product_id", contrl.DeleteItemCart)
 	}
 }

@@ -218,6 +218,18 @@ func (serv *UserServiceImpl) GetUserByETHAddr(ctx context.Context, addr string) 
 	}
 }
 
+func (serv *UserServiceImpl) GetCountUser(ctx context.Context) web.GetCountUserResponse {
+	var countUser web.GetCountUserResponse
+
+	err := serv.DB.Transaction(func(tx *gorm.DB) error {
+		countUser.TotalUser = serv.UserRepo.CountUser(ctx, tx)
+		return nil
+	})
+	helper.Err(err)
+
+	return countUser
+}
+
 /*
 				func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) []web.UserGetResponse {
 	var users []web.UserGetResponse

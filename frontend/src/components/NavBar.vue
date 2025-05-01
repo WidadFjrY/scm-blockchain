@@ -26,10 +26,12 @@ async function logoutHandle() {
 </script>
 <template>
     <nav>
-        <div class="logo">
-            <img src="@/assets/img/saj.jpg" width="60" alt="">
-            <h1>CV. Sindang Agung Jaya</h1>
-        </div>
+        <router-link to="/">
+            <div class="logo">
+                <img src="@/assets/img/saj.jpg" width="60" alt="">
+                <h1>CV. Sindang Agung Jaya</h1>
+            </div>
+        </router-link>
         <ul>
             <li><router-link to="/transaction-history">Riwayat Transasksi</router-link></li>
             <li><router-link to="/tracking">Lacak Pesanan</router-link></li>

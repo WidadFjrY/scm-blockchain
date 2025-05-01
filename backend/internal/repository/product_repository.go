@@ -14,6 +14,9 @@ type ProductRepository interface {
 
 	GetProducts(ctx context.Context, tx *gorm.DB) []model.Product
 	GetProduct(ctx context.Context, tx *gorm.DB, productId string) model.Product
+	GetTotalProducts(ctx context.Context, tx *gorm.DB) int64
+
+	DeleteProductById(ctx context.Context, tx *gorm.DB, productId string)
 
 	GetBrands(ctx context.Context, tx *gorm.DB) []model.ProductBrand
 	GetUnits(ctx context.Context, tx *gorm.DB) []model.ProductUnit
@@ -21,5 +24,5 @@ type ProductRepository interface {
 	AddToCart(ctx context.Context, tx *gorm.DB, cart model.Cart)
 	GetCarts(ctx context.Context, tx *gorm.DB, userId string) []model.Cart
 	UpdateCartQty(ctx context.Context, tx *gorm.DB, cart model.Cart)
-	DeleteItemCart(ctx context.Context, tx *gorm.DB, cartId string)
+	DeleteItemCart(ctx context.Context, tx *gorm.DB, productId string)
 }

@@ -140,35 +140,41 @@ watch(
 
     <div class="container">
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
-        <h2>Daftar Produk</h2>
-        <input type="text" placeholder="Cari Product" v-model="state.search">
-        <table v-if="state.products != null">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Produk</th>
-                    <th>Merek</th>
-                    <th>Stok</th>
-                    <th>Harga</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(product, index) in state.filteredProducts" :key="product.id">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ product.product_name }}</td>
-                    <td>{{ product.brand }}</td>
-                    <td>{{ product.stock }}</td>
-                    <td>Rp. {{ product.price.toLocaleString("id-ID") }}</td>
-                    <td style="display: flex; justify-content: center;"><button
-                            @click.prevent="getProductById(product.id)">Lihat
-                            Detail</button></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <router-link to="/add/product">
-            Tambah Product
+        <div v-if="state.products !== null">
+            <input type="text" placeholder="Cari Product" v-model="state.search">
+            <h2>Daftar Produk</h2>
+        </div>
+        <div v-if="state.products !== null" class="card-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Produk</th>
+                        <th>Merek</th>
+                        <th>Stok</th>
+                        <th>Harga</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(product, index) in state.filteredProducts" :key="product.id">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.brand }}</td>
+                        <td>{{ product.stock }}</td>
+                        <td>Rp. {{ product.price.toLocaleString("id-ID") }}</td>
+                        <td style="display: flex; justify-content: center;"><button
+                                @click.prevent="getProductById(product.id)">Lihat
+                                Detail</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-container" v-else>
+            <h2 style="text-align: center; padding: 3rem;">Belum ada produk</h2>
+        </div>
+        <router-link v-if="user.role === 'Warehouse_Staff'" to="/add/product">
+            Tambah Produk
         </router-link>
     </div>
 </template>
@@ -191,6 +197,14 @@ watch(
     font-size: 1.5rem;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
+}
+
+
+.card-container {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    overflow: hidden;
 }
 
 table {
@@ -223,8 +237,8 @@ table td {
 
 table button {
     padding: 1rem;
-    border-radius: 1rem;
-    font-size: 1.3rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
     background-color: rgb(32, 193, 243);
     color: white;
     border: none;

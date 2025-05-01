@@ -1,4 +1,5 @@
 <script setup>
+import { web3, SupplyChainContract } from '@/assets/script/eth-transaction.js'
 import { ref } from 'vue';
 
 import axios from 'axios';
@@ -10,25 +11,11 @@ import NavBarDash from '@/components/NavBarDash.vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const route = useRoute()
-
-const products = ref([
-    { name: "Nippon Paint 5 kg", id: 'ID381729', stock: 23 },
-    { name: "Pipa 5M", id: 'ID381729', stock: 10 },
-    { name: "Keran Onda", id: 'ID381729', stock: 3 },
-    { name: "Paku Beton", id: 'ID381729', stock: '10 Kg' },
-    { name: "Semen 3 Roda 50 Kg", id: 'ID381729', stock: 32 },
-])
-
-const orders = ref([
-    { name: "PT. Besi", status: 'Dikirim' },
-    { name: "Batu", status: 'Pending' },
-    { name: "PVC", status: 'Dikirim' },
-    { name: "Nippon", status: 'Diterima' },
-    { name: "Tiga Roda", status: 'Diterima' },
-])
+const products = ref([])
+const product = ref([])
 
 function getStatusColor(status) {
-    if (status === "Dikirim") {
+    if (status === "Pengiriman") {
         return "yellow";
     } else if (status === "Diterima") {
         return "green";
@@ -37,6 +24,9 @@ function getStatusColor(status) {
     }
 }
 
+const totalUser = ref(0)
+const totalProduct = ref(0)
+const transactionsArray = ref([]);
 const user = ref({
     name: "",
     ethAddr: "",
@@ -57,7 +47,76 @@ async function getDataUser() {
 
 }
 
+async function getTotal() {
+    try {
+        const responseTotalUser = await axios.get(`${BACKEND_BASE_URL}/user/count`)
+        totalUser.value = responseTotalUser.data.data.total_user
+
+        const responseTotalProduct = await axios.get(`${BACKEND_BASE_URL}/product/count`)
+        totalProduct.value = responseTotalProduct.data.data.total_product
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getAllPrduct() {
+    try {
+        const response = await axios.get(`${BACKEND_BASE_URL}/products`)
+        products.value = response.data.data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getAllPendingTransactions() {
+    try {
+        const transactions = await SupplyChainContract.methods.getAllPendingTransactions().call();
+        const productPromises = [];
+
+        for (let i = 0; i < transactions.length; i++) {
+            transactionsArray.value.push({
+                id: transactions[i][0],
+                buyer: transactions[i][1],
+                productIds: transactions[i][2],
+                quantities: transactions[i][3].map(qty => Number(qty).toLocaleString()),
+                totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
+                shippingAddress: transactions[i][5],
+                timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
+                status: transactions[i][7]
+            });
+
+            transactionsArray.value[i].productIds.forEach(productId => {
+                productPromises.push(getProduct(transactions[i][0], productId));
+            });
+        }
+
+        await Promise.all(productPromises);
+
+        console.log(transactionsArray.value[0])
+    } catch (error) {
+        console.error("Gagal mengambil transaksi yang belum selesai:", error);
+    }
+}
+
+async function getProduct(trxId, productId) {
+    try {
+        const response = await axios.get(`${BACKEND_BASE_URL}/product/${productId}`);
+        product.value.push({ trxId: trxId, data: response.data.data });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function getStatusClass(status) {
+    return status.toLowerCase()
+}
+
+getAllPendingTransactions()
+getAllPrduct()
 getDataUser()
+getTotal()
 
 </script>
 
@@ -69,10 +128,11 @@ getDataUser()
         <div class="overview">
             <h2>Ringkasan</h2>
             <div class="card">
-                <CardOverview :title="'Total Produk'" :value="10" :icon="'Produk.png'"></CardOverview>
-                <CardOverview :title="'Total Distributor'" :value="10" :icon="'Manajemen Distributor.png'">
+                <CardOverview :title="'Total Produk'" :value="totalProduct" :icon="'Produk.png'"></CardOverview>
+                <CardOverview :title="'Total Pengguna'" :value="totalUser" :icon="'Manajemen Distributor.png'">
                 </CardOverview>
-                <CardOverview :title="'Pesanan Aktif'" :value="10" :icon="'Manajemen Pesanan.png'"></CardOverview>
+                <CardOverview :title="'Pesanan Aktif'" :value="transactionsArray.length"
+                    :icon="'Manajemen Pesanan.png'"></CardOverview>
             </div>
         </div>
         <div class="list-table">
@@ -88,11 +148,15 @@ getDataUser()
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(product, index) in products" :key="product.id">
+                        <tr v-if="products.length === 0">
+                            <td colspan="4" style="text-align: center; color: gray;">Belum ada produk</td>
+                        </tr>
+                        <tr v-else v-for="(product, index) in products" :key="product.id">
                             <td>{{ index + 1 }}</td>
                             <td>{{ product.id }}</td>
-                            <td>{{ product.name }}</td>
-                            <td style="color: red;">{{ product.stock }}</td>
+                            <td>{{ product.product_name }}</td>
+                            <td :style="product.stock < 10 ? 'color: red;' : 'color: var(--dark-color)'">{{
+                                product.stock }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -102,30 +166,53 @@ getDataUser()
                 <table>
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Distributor</th>
+                            <th>ID</th>
+                            <th>Barang</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(order, index) in orders" :key="order.id">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ order.name }}</td>
+                        <tr v-if="transactionsArray.length === 0">
+                            <td colspan="3" style="text-align: center; color: gray;">Belum ada pesanan</td>
+                        </tr>
+                        <tr v-else v-for="(transaction, index) in transactionsArray" :key="transaction.id">
+                            <td>{{ transaction.id }}</td>
                             <td>
-                                <div class="status"
-                                    :style="{ backgroundColor: getStatusColor(order.status), color: order.status === 'Dikirim' ? 'var(--dark-color)' : 'white' }">
-                                    {{
-                                        order.status }}</div>
+                                {{ product[0].data.product_name }}
+                                {{ transaction.productIds.length - 1 === 0 ? "" : `+${transaction.productIds.length - 1}
+                                lainnya` }}
+                            </td>
+                            <td>
+                                <div :class="getStatusClass(transaction.status)">
+                                    {{ transaction.status }}
+                                </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.pending {
+    color: #F59E0B;
+}
+
+.proses {
+    color: #3B82F6;
+}
+
+.pengiriman {
+    color: #8B5CF6;
+}
+
+.selesai {
+    color: #10B981;
+}
+
 .container {
     padding: 2rem;
     margin-left: 25%;
@@ -145,7 +232,6 @@ getDataUser()
 .list-table {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-top: 2rem;
 }
 
@@ -181,13 +267,5 @@ table th {
 
 table td {
     font-size: 1.3rem;
-}
-
-.status {
-    width: 90%;
-    border-radius: 1rem;
-    color: white;
-    padding: 0 1rem;
-    text-align: center;
 }
 </style>

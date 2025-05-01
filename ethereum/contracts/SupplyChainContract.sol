@@ -21,6 +21,7 @@ contract SupplyChainContract {
         string[] productIds;
         uint256[] quantities;
         uint256 totalPrice;
+        string shippingAddress;
         uint256 timestamp;
         string status;
     }
@@ -49,6 +50,7 @@ contract SupplyChainContract {
         string[] productIds,
         uint256[] quantities,
         uint256 totalPrice,
+        string shippingAddress,
         uint256 timestamp,
         string status
     );
@@ -170,7 +172,8 @@ contract SupplyChainContract {
 
     function createTransaction(
         string[] memory _productIds,
-        uint256[] memory _quantities
+        uint256[] memory _quantities,
+        string memory _shippingAddress
     ) public payable {
         require(_productIds.length == _quantities.length, "Invalid input");
         require(_productIds.length > 0, "No products specified");
@@ -183,6 +186,7 @@ contract SupplyChainContract {
             _productIds,
             _quantities,
             msg.value,
+            _shippingAddress,
             block.timestamp,
             "Pending"
         );
@@ -195,6 +199,7 @@ contract SupplyChainContract {
             _productIds,
             _quantities,
             msg.value,
+            _shippingAddress,
             block.timestamp,
             "Pending"
         );
@@ -221,6 +226,7 @@ contract SupplyChainContract {
             string[] memory,
             uint256[] memory,
             uint256,
+            string memory,
             uint256,
             string memory
         )
@@ -234,6 +240,7 @@ contract SupplyChainContract {
             txn.productIds,
             txn.quantities,
             txn.totalPrice,
+            txn.shippingAddress,
             txn.timestamp,
             txn.status
         );
@@ -330,5 +337,38 @@ contract SupplyChainContract {
         }
 
         return pendingTransactions;
+    }
+
+    function getAllCompletedTransactions()
+        public
+        view
+        onlyAdmin
+        returns (Transaction[] memory)
+    {
+        uint256 count = 0;
+
+        for (uint256 i = 1; i <= transactionCounter; i++) {
+            if (
+                keccak256(abi.encodePacked(transactions[i].status)) ==
+                keccak256(abi.encodePacked("Selesai"))
+            ) {
+                count++;
+            }
+        }
+
+        Transaction[] memory completedTransactions = new Transaction[](count);
+        uint256 index = 0;
+
+        for (uint256 i = 1; i <= transactionCounter; i++) {
+            if (
+                keccak256(abi.encodePacked(transactions[i].status)) ==
+                keccak256(abi.encodePacked("Selesai"))
+            ) {
+                completedTransactions[index] = transactions[i];
+                index++;
+            }
+        }
+
+        return completedTransactions;
     }
 }

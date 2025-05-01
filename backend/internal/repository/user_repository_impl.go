@@ -117,3 +117,10 @@ func (repo *UserRepositoryImpl) GetUserByETHAddr(ctx context.Context, tx *gorm.D
 	helper.Err(result.Error)
 	return user
 }
+
+func (repo *UserRepositoryImpl) CountUser(ctx context.Context, tx *gorm.DB) int64 {
+	var totalUser int64
+	helper.Err(tx.WithContext(ctx).Table("users").Count(&totalUser).Error)
+
+	return totalUser
+}

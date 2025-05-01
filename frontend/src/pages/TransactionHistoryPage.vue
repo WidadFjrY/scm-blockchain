@@ -28,8 +28,6 @@ async function getDataUser() {
 
 }
 
-
-
 async function ETHPrice() {
     try {
         const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=idr");
@@ -86,18 +84,7 @@ async function getProduct(trxId, productId) {
 }
 
 function getStatusClass(status) {
-    switch (status) {
-        case 'Pending':
-            return 'pending';
-        case 'Proses':
-            return 'proses';
-        case 'Pengiriman':
-            return 'pengiriman';
-        case 'Selesai':
-            return 'selesai';
-        default:
-            return '';
-    }
+    return status.toLowerCase()
 }
 
 const groupTransactions = () => {
@@ -137,7 +124,7 @@ getDataUser()
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
             </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" v-if="groupTransactions">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product">
                 <div style="display: flex; align-items: center; gap:2rem">
                     <div class="card-img">
@@ -155,6 +142,9 @@ getDataUser()
                 </div>
                 <h1 :class="getStatusClass(transactionsArray[index].status)">{{ transactionsArray[index].status }}</h1>
             </div>
+        </div>
+        <div class="card-container">
+            <h2 style="text-align: center; width: 100%;">Tidak ada transaksi</h2>
         </div>
     </div>
 </template>

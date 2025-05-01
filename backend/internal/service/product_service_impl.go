@@ -166,6 +166,25 @@ func (serv *ProductServiceImpl) GetProduct(ctx context.Context, productId string
 	return product
 }
 
+func (serv *ProductServiceImpl) GetTotalProduct(ctx context.Context) web.GetTotalProductResponse {
+	var totalProduct web.GetTotalProductResponse
+
+	err := serv.DB.Transaction(func(tx *gorm.DB) error {
+		totalProduct.TotalProduct = serv.Repo.GetTotalProducts(ctx, tx)
+		return nil
+	})
+
+	helper.Err(err)
+	return totalProduct
+}
+
+func (serv *ProductServiceImpl) DeleteProductById(ctx context.Context, productId string) {
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.DeleteProductById(ctx, tx, productId)
+		return nil
+	}))
+}
+
 func (serv *ProductServiceImpl) GetBrands(ctx context.Context) []web.BrandResponse {
 	var brands []web.BrandResponse
 
@@ -224,6 +243,7 @@ func (serv *ProductServiceImpl) GetCarts(ctx context.Context, userId string) []w
 					ID:          cart.Product.ID,
 					ProductName: cart.Product.ProductName,
 					Price:       cart.Product.Prices[0].Price,
+					Stock:       cart.Product.Stocks[0].StockTotal,
 					Brand:       cart.Product.Brand.Name,
 					Unit:        cart.Product.Unit.Name,
 					FilePath:    cart.Product.PicturePath,
@@ -242,6 +262,13 @@ func (serv *ProductServiceImpl) UpdateCartQty(ctx context.Context, productId str
 			ProductID: productId,
 			Quantity:  qty,
 		})
+		return nil
+	}))
+}
+
+func (serv *ProductServiceImpl) DeleteItemCart(ctx context.Context, productId string) {
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.DeleteItemCart(ctx, tx, productId)
 		return nil
 	}))
 }

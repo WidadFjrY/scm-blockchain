@@ -98,6 +98,11 @@ func (contr *UserControllerImpl) GetUserByETHAddr(ctx *gin.Context) {
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
 
+func (contr *UserControllerImpl) GetCountUser(ctx *gin.Context) {
+	response := contr.UserServ.GetCountUser(ctx.Request.Context())
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
 /*
 func (contr *UserControllerImpl) GetUserByManager(ctx *gin.Context) {
 	role, _ := ctx.Get("role")

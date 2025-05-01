@@ -17,4 +17,5 @@ type UserRepository interface {
 	UpdateById(ctx context.Context, tx *gorm.DB, user model.User)
 	UpdatePassword(ctx context.Context, tx *gorm.DB, newPassword string, userId string)
 	GetUserByETHAddr(ctx context.Context, tx *gorm.DB, addr string) model.User
+	CountUser(ctx context.Context, tx *gorm.DB) int64
 }

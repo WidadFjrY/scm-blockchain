@@ -10,6 +10,7 @@ const props = defineProps({
     stock: Number,
     brand: String,
     price: String,
+    priceInIdr: String
 })
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
@@ -39,6 +40,10 @@ async function addToCartHandle() {
         <p>{{ props.brand }}</p>
         <div style="display: flex; align-items: center; gap:0.3rem">
             <p class="price">{{ props.price }} ETH </p>
+            <p>/{{ props.unit }}</p>
+        </div>
+        <div style="display: flex; align-items: center; gap:0.3rem">
+            <p class="price">Rp. {{ props.priceInIdr.toLocaleString("id-ID") }} </p>
             <p>/{{ props.unit }}</p>
         </div>
         <button @click.prevent="addToCartHandle">+ Keranjang</button>

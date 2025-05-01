@@ -9,6 +9,9 @@ type ProductController interface {
 
 	GetProducts(ctx *gin.Context)
 	GetProduct(ctx *gin.Context)
+	GetTotalProduct(ctx *gin.Context)
+
+	DeleteProductById(ctx *gin.Context)
 
 	GetBrands(ctx *gin.Context)
 	GetUnits(ctx *gin.Context)
@@ -16,4 +19,5 @@ type ProductController interface {
 	AddToCart(ctx *gin.Context)
 	GetCarts(ctx *gin.Context)
 	UpdateCartQty(ctx *gin.Context)
+	DeleteItemCart(ctx *gin.Context)
 }

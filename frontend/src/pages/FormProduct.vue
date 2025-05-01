@@ -83,22 +83,34 @@ async function addProductHandle() {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
-        })
+        });
 
         if (response.status === 201) {
-            const txReceipt = await SupplyChainContract.methods
-                .addProduct(response.data.data.product_id, formProduct.value.product_name, web3.utils.keccak256(`${formProduct.value.product_name, formProduct.value.brand_id, formProduct.value.unit_id}`))
-                .send({ from: userAddress })
+            try {
+                const hashData = web3.utils.keccak256(`${formProduct.value.product_name}${formProduct.value.brand_id}${formProduct.value.unit_id}`);
 
-            if (!txReceipt.status) {
-                throw new Error("Transaksi blockchain gagal")
+                const txReceipt = await SupplyChainContract.methods
+                    .addProduct(
+                        response.data.data.product_id,
+                        formProduct.value.product_name,
+                        hashData
+                    )
+                    .send({ from: userAddress });
+
+                if (!txReceipt.status) {
+                    throw new Error("Transaksi blockchain gagal");
+                }
+
+                router.push('/products');
+            } catch (blockchainError) {
+                await axios.delete(`${BACKEND_BASE_URL}/product/${response.data.data.product_id}`);
+                console.error("Blockchain error:", blockchainError);
             }
         }
-
-        router.push('/products')
-    } catch (error) {
-        console.log(error)
+    } catch (apiError) {
+        console.error("API error:", apiError);
     }
+
 }
 
 </script>

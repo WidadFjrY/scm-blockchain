@@ -2,7 +2,7 @@
 import NavBar from '@/components/NavBar.vue';
 
 import { web3, SupplyChainContract } from '@/assets/script/eth-transaction.js'
-import { ref, reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 import axios from 'axios';
 
@@ -13,6 +13,7 @@ const user = ref({
 })
 const ethPrice = ref();
 const carts = ref([]);
+const shippingAddress = ref("")
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 const convertToETH = (idrPrice) => {
@@ -56,6 +57,7 @@ async function getData() {
 
         carts.value = cartResponse.data.data
 
+        console.log(carts.value)
     } catch (error) {
         console.log(error)
     }
@@ -77,20 +79,30 @@ async function checkOutHandle() {
 
     try {
         const valueInWei = web3.utils.toWei(convertToETH(totalPrice()).toString(), 'ether');
-        console.log(valueInWei)
         const tx = await SupplyChainContract.methods
-            .createTransaction(productIds, quantities)
+            .createTransaction(productIds, quantities, shippingAddress.value)
             .send({ from: userAddress, value: valueInWei });
 
         console.log("Transaction Hash:", tx.transactionHash);
 
-        window.location.href = "/";
+        for (const cart of carts.value) {
+            await deleteCartHandle(cart.product_id);
+        }
 
+        window.location.href = "/";
     } catch (error) {
         console.error("Transaksi gagal:", error);
     }
 }
 
+async function deleteCartHandle(productId) {
+    try {
+        await axios.delete(`${BACKEND_BASE_URL}/cart/${productId}`)
+    } catch (error) {
+        console.log(error)
+    }
+    carts.value = carts.value.filter(cart => cart.product_id !== productId);
+}
 
 getData()
 </script>
@@ -104,8 +116,7 @@ getData()
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
             </div>
         </div>
-        <p v-if="!carts" style="text-align: center;">Tidak ada produk</p>
-        <div v-else class="card-container">
+        <div class="card-container" v-if="carts">
             <div v-for="(cart, index) in carts" :key="index">
                 <div class="card">
                     <div style="display: flex;gap:1rem ;width: 20rem;">
@@ -115,24 +126,39 @@ getData()
                         <div>
                             <h2>{{ cart.product.product_name }}</h2>
                             <p>{{ cart.product.brand }}</p>
-                            <p>Satuan {{ cart.product.unit }}</p>
+                            <p>Stok: {{ cart.product.stock }} {{ cart.product.unit }}</p>
                         </div>
                     </div>
-                    <div class="card-btn">
-                        <button @click.prevent="cart.quantity--, updateQty(cart.product_id, cart.quantity)">-</button>
-                        <p>{{ cart.quantity }}</p>
-                        <button @click.prevent="cart.quantity++, updateQty(cart.product_id, cart.quantity)">+</button>
+                    <div style="display: flex; align-items: center; gap:1rem">
+                        <div class="card-btn-qty">
+                            <button @click.prevent="cart.quantity--, updateQty(cart.product_id, cart.quantity)"
+                                :disabled="cart.quantity <= 1">-</button>
+                            <p>{{ cart.quantity }}</p>
+                            <button @click.prevent="cart.quantity++, updateQty(cart.product_id, cart.quantity)"
+                                :disabled="cart.quantity >= cart.product.stock">+</button>
+                        </div>
                     </div>
-                    <div class="card-price">
-                        <p>Rp. {{ (cart.product.price * cart.quantity).toLocaleString("id-ID") }}</p>
-                        <h3>{{ convertToETH(cart.product.price * cart.quantity) }} ETH</h3>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="card-price">
+                            <p>Rp. {{ (cart.product.price * cart.quantity).toLocaleString("id-ID") }}</p>
+                            <h3>{{ convertToETH(cart.product.price * cart.quantity) }} ETH</h3>
+                        </div>
+                        <img src="/assets/icon/Trash.png" alt="" width="40"
+                            style="cursor: pointer !important; pointer-events: all;"
+                            @click.prevent="deleteCartHandle(cart.product_id)">
                     </div>
                 </div>
             </div>
-            <h2 style="text-align: end;">Total: {{ convertToETH(totalPrice()) }} ETH</h2>
+            <h2 style="text-align: end;">Total (ETH): {{ convertToETH(totalPrice()) }} ETH</h2>
+            <h2 style="text-align: end;">Total (IDR): Rp. {{ totalPrice().toLocaleString("ID-id") }}</h2>
+            <label for="shippingAddress">Alamat Pengiriman</label>
+            <input type="text" id="shippingAddress" v-model="shippingAddress">
             <div class="card-btn">
-                <button @click.prevent="checkOutHandle">Check Out</button>
+                <button @click.prevent="checkOutHandle" :disabled="!shippingAddress">Check Out</button>
             </div>
+        </div>
+        <div v-else class="card-container">
+            <h2 style="text-align: center;">Tidak ada produk</h2>
         </div>
     </div>
 </template>
@@ -179,17 +205,17 @@ p {
     border-radius: 0.5rem;
 }
 
-.card-btn {
+.card-btn-qty {
     display: flex;
     align-items: center;
 }
 
-.card-btn p {
-    width: 2rem;
+.card-btn-qty p {
+    padding: 1rem;
     text-align: center;
 }
 
-.card-btn button {
+.card-btn-qty button {
     background-color: white;
     width: 40px;
     height: 40px;
@@ -224,5 +250,29 @@ p {
     color: white;
     font-size: 1.4rem;
     cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+label {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    height: 3rem;
+    border-radius: 1.5rem;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    padding: 1rem;
+    color: var(--dark-color);
+    background-color: #f2f2f2;
+    margin-top: 0.5rem;
 }
 </style>
