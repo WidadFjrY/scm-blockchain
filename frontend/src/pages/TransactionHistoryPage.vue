@@ -56,8 +56,8 @@ async function getUserTransactions() {
                 productIds: transactions[i][2],
                 quantities: transactions[i][3][0].toLocaleString(),
                 totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
-                timestamp: new Date(Number(transactions[i][5]) * 1000).toLocaleString(),
-                status: transactions[i][6]
+                timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
+                status: transactions[i][7]
             });
 
             transactions[i][2].forEach(productId => {
@@ -84,7 +84,9 @@ async function getProduct(trxId, productId) {
 }
 
 function getStatusClass(status) {
-    return status.toLowerCase()
+    if (status) {
+        return status.toLowerCase()
+    }
 }
 
 const groupTransactions = () => {
@@ -107,6 +109,7 @@ const groupTransactions = () => {
     }, {}));
 
     groupedTransactions.value = result;
+    console.log(groupedTransactions.value)
 }
 
 getUserTransactions()
@@ -124,7 +127,7 @@ getDataUser()
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
             </div>
         </div>
-        <div class="card-container" v-if="groupTransactions">
+        <div class="card-container" v-if="groupedTransactions.length > 0">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product">
                 <div style="display: flex; align-items: center; gap:2rem">
                     <div class="card-img">
@@ -143,9 +146,10 @@ getDataUser()
                 <h1 :class="getStatusClass(transactionsArray[index].status)">{{ transactionsArray[index].status }}</h1>
             </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" v-else>
             <h2 style="text-align: center; width: 100%;">Tidak ada transaksi</h2>
         </div>
+
     </div>
 </template>
 <style scoped>

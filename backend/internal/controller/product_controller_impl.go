@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"scm-blockchain-ethereum/domain/web"
 	"scm-blockchain-ethereum/internal/service"
+	"scm-blockchain-ethereum/pkg/exception"
 	"scm-blockchain-ethereum/pkg/helper"
 	"strconv"
 	"strings"
@@ -159,5 +160,17 @@ func (contr *ProductControllerImpl) UpdateCartQty(ctx *gin.Context) {
 func (contr *ProductControllerImpl) DeleteItemCart(ctx *gin.Context) {
 	productId := ctx.Params.ByName("product_id")
 	contr.Serv.DeleteItemCart(ctx.Request.Context(), productId)
+	helper.Response(ctx, http.StatusOK, "Ok", "")
+}
+
+func (contr *ProductControllerImpl) UpdateProductStock(ctx *gin.Context) {
+	var request web.UpdateProductStockRequest
+	role, _ := ctx.Get("role")
+	err := ctx.ShouldBind(&request)
+	if err != nil {
+		panic(exception.NewBadRequestError("request body required"))
+	}
+
+	contr.Serv.UpdateProductStock(ctx.Request.Context(), role.(string), request)
 	helper.Response(ctx, http.StatusOK, "Ok", "")
 }

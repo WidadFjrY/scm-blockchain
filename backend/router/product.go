@@ -29,5 +29,7 @@ func ProductRouter(router *gin.Engine, db *gorm.DB, contrl controller.ProductCon
 		auth.PUT("/api/cart", contrl.UpdateCartQty)
 		auth.GET("/api/cart", contrl.GetCarts)
 		auth.DELETE("/api/cart/:product_id", contrl.DeleteItemCart)
+
+		auth.PUT("/api/product/stock", contrl.UpdateProductStock)
 	}
 }

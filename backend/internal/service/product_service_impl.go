@@ -6,6 +6,7 @@ import (
 	"scm-blockchain-ethereum/domain/model"
 	"scm-blockchain-ethereum/domain/web"
 	"scm-blockchain-ethereum/internal/repository"
+	"scm-blockchain-ethereum/pkg/exception"
 	"scm-blockchain-ethereum/pkg/helper"
 	"time"
 
@@ -24,6 +25,9 @@ func NewProductService(db *gorm.DB, validator *validator.Validate, repo reposito
 }
 
 func (serv *ProductServiceImpl) ProductCreate(ctx context.Context, request web.ProductCreateRequest, filePath string, role string) web.ProductCreateResponse {
+	if role != "Warehouse_Staff" {
+		panic(exception.NewUnauthorized("no authority"))
+	}
 	valErr := serv.Validator.Struct(&request)
 	helper.ValError(valErr)
 
@@ -81,8 +85,8 @@ func (serv *ProductServiceImpl) BrandCreate(ctx context.Context, request web.Bra
 	}))
 
 	return web.BrandCreateResponse{
+		ID:        brandId,
 		BrandName: request.BrandName,
-		CreatedAt: time.Now(),
 	}
 }
 
@@ -99,10 +103,9 @@ func (serv *ProductServiceImpl) UnitCreate(ctx context.Context, request web.Unit
 		})
 		return nil
 	}))
-
 	return web.UnitCreateResponse{
-		UnitName:  request.UnitName,
-		CreatedAt: time.Now(),
+		ID:       unitId,
+		UnitName: request.UnitName,
 	}
 }
 
@@ -271,4 +274,25 @@ func (serv *ProductServiceImpl) DeleteItemCart(ctx context.Context, productId st
 		serv.Repo.DeleteItemCart(ctx, tx, productId)
 		return nil
 	}))
+}
+
+func (serv *ProductServiceImpl) UpdateProductStock(ctx context.Context, role string, request web.UpdateProductStockRequest) {
+	if request.StockIn > 0 {
+		if role != "Warehouse_Staff" {
+			panic(exception.NewUnauthorized("no authority"))
+		}
+	}
+
+	helper.ValError(serv.Validator.Struct(&request))
+	err := serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.Repo.UpdateProductStock(ctx, tx, model.ProductStock{
+			ID:        helper.GenerateRandomString(15),
+			ProductID: request.ProductID,
+			StockIn:   request.StockIn,
+			StockOut:  request.StockOut,
+		})
+		return nil
+	})
+
+	helper.Err(err)
 }

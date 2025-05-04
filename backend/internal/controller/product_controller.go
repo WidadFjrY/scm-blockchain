@@ -20,4 +20,6 @@ type ProductController interface {
 	GetCarts(ctx *gin.Context)
 	UpdateCartQty(ctx *gin.Context)
 	DeleteItemCart(ctx *gin.Context)
+
+	UpdateProductStock(ctx *gin.Context)
 }

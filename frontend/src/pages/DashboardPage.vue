@@ -121,7 +121,7 @@ getTotal()
 </script>
 
 <template>
-    <SideBar></SideBar>
+    <SideBar v-if="user.role" :role="user.role"></SideBar>
 
     <div class="container">
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>

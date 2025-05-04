@@ -159,6 +159,8 @@ getAllPendingTransactions();
                     <p>{{ transactionsArray[selectedTransactionIndex].buyer }}</p>
                     <h3>Alamat Pengiriman</h3>
                     <p>{{ transactionsArray[selectedTransactionIndex].shippingAddress }}</p>
+                    <h3>No. Telepon</h3>
+                    <p>{{ userTrx.telp }}</p>
                     <h3>Produk:</h3>
                     <div style="max-height: 350px; overflow-y: auto;">
                         <div v-for="(product, index) in selectedTransaction.products" :key="index">
@@ -189,6 +191,7 @@ getAllPendingTransactions();
                     <div>
                         <h3>Ubah Status</h3>
                         <select name="status" id="status" v-model="status">
+                            <option disabled value="">-- Pilih status --</option>
                             <option value="Proses">Proses</option>
                             <option value="Pengiriman">Pengiriman</option>
                             <option value="Selesai">Selesai</option>
@@ -201,7 +204,7 @@ getAllPendingTransactions();
         </div>
     </div>
 
-    <SideBar></SideBar>
+    <SideBar v-if="user.role" :role="user.role"></SideBar>
 
     <div class="container">
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>

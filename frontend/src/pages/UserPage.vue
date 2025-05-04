@@ -8,6 +8,8 @@ import { useRoute } from 'vue-router';
 import SideBar from '@/components/SideBar.vue';
 import NavBarDash from '@/components/NavBarDash.vue';
 
+import { formatedDate } from '@/assets/script/formated-date.js'
+
 const route = useRoute()
 const state = reactive({
     search: null,
@@ -79,7 +81,12 @@ async function addUser() {
 }
 
 async function getUserById(id) {
-
+    try {
+        const response = await axios.get(`${BACKEND_BASE_URL}/user/${id}`)
+        state.user = response.data.data
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 async function getAllData() {
@@ -170,11 +177,23 @@ watch(
                 <button @click="isModalOpen = !isModalOpen" class="btn-close">X</button>
             </div>
             <div class="content">
+                <h3>Nama</h3>
+                <p>{{ state.user.name }}</p>
+                <h3>Email</h3>
+                <p>{{ state.user.email }}</p>
+                <h3>No Telepon</h3>
+                <p>{{ state.user.telp }}</p>
+                <h3>Alamat ETH</h3>
+                <p>{{ state.user.eth_addr }}</p>
+                <h3>Role</h3>
+                <p>{{ state.user.role }}</p>
+                <h3>Ditambahkan Pada</h3>
+                <p>{{ formatedDate(state.user.created_at) }}</p>
 
             </div>
         </div>
     </div>
-    <SideBar></SideBar>
+    <SideBar v-if="user.role" :role="user.role"></SideBar>
     <div class="container">
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
         <h2>Daftar Pengguna</h2>
@@ -196,11 +215,11 @@ watch(
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
                     <td style="display: flex; justify-content: center;"><button
-                            @click.prevent="getUserById(user.id)">Lihat Detail</button></td>
+                            @click.prevent="getUserById(user.id), isModalOpen = !isModalOpen">Lihat Detail</button></td>
                 </tr>
             </tbody>
         </table>
-        <button @click="isFormModalOpen = !isFormModalOpen">Tambah Pengguna</button>
+        <button v-if="user.role === 'Admin'" @click="isFormModalOpen = !isFormModalOpen">Tambah Pengguna</button>
     </div>
 </template>
 

@@ -23,4 +23,6 @@ type ProductService interface {
 	GetCarts(ctx context.Context, userId string) []web.CartResponse
 	UpdateCartQty(ctx context.Context, productId string, qty int)
 	DeleteItemCart(ctx context.Context, productId string)
+
+	UpdateProductStock(ctx context.Context, role string, request web.UpdateProductStockRequest)
 }

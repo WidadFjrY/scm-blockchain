@@ -125,7 +125,7 @@ getDataUser()
                 <h2>1 ETH = Rp. {{ ethPrice.toLocaleString("id-ID") }}</h2>
             </div>
         </div>
-        <div class="card-container" v-if="groupedTransactions">
+        <div class="card-container" v-if="groupedTransactions.length > 0">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product">
                 <div style="display: flex; align-items: center; gap:2rem">
                     <div class="card-img">

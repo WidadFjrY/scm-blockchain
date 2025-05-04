@@ -19,49 +19,65 @@ import axios from "axios";
 const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
-  { path: "/", name: "Home", component: Home },
-  { path: "/cart", name: "Cart", component: Cart },
-  { path: "/tracking", name: "Tracking", component: Tracking },
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
+    meta: { allowedRoles: ["Customer"] },
+  },
+  {
+    path: "/cart",
+    name: "Cart",
+    component: Cart,
+    meta: { allowedRoles: ["Customer"] },
+  },
+  {
+    path: "/tracking",
+    name: "Tracking",
+    component: Tracking,
+    meta: { allowedRoles: ["Customer"] },
+  },
   {
     path: "/transaction-history",
     name: "Transaction History",
     component: TransactionHistory,
+    meta: { allowedRoles: ["Customer"] },
   },
   {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
-    meta: { requiresAdmin: true },
+    meta: { allowedRoles: ["Admin", "Warehouse_Staff"] },
   },
   {
     path: "/products",
     name: "Produk",
     component: Product,
-    meta: { requiresAdmin: true },
+    meta: { allowedRoles: ["Admin", "Warehouse_Staff"] },
   },
   {
     path: "/add/product",
     name: "Tambah Produk",
     component: FormProduct,
-    meta: { requiresAdmin: true },
+    meta: { allowedRoles: ["Warehouse_Staff"] },
   },
   {
     path: "/orders",
     name: "Manajemen Pesanan",
     component: Order,
-    meta: { requiresAdmin: true },
+    meta: { allowedRoles: ["Admin", "Warehouse_Staff"] },
   },
   {
     path: "/users",
     name: "Pengguna",
     component: User,
-    meta: { requiresAdmin: true },
+    meta: { allowedRoles: ["Admin", "Warehouse_Staff"] },
   },
   {
     path: "/reports",
     name: "Laporan",
     component: Report,
-    meta: { requiresAdmin: true },
+    meta: { allowedRoles: ["Admin"] },
   },
 ];
 
@@ -75,19 +91,23 @@ router.beforeEach(async (to, from, next) => {
 
   const auth = await isAuthenticated(token);
 
-  if (to.name !== "Login" && !auth.status && to.name !== "Register") {
+  if (!auth.status && to.name !== "Login" && to.name !== "Register") {
     return next({ name: "Login" });
   }
 
   if (auth.status && (to.name === "Login" || to.name === "Register")) {
-    return next(from.name ? { name: from.name } : { name: "Home" });
+    if (auth.role === "Admin" || auth.role === "Warehouse_Staff") {
+      return next({ name: "Dashboard" });
+    } else {
+      return next({ name: "Home" });
+    }
   }
 
-  if (
-    to.meta.requiresAdmin &&
-    !(auth.role === "Admin" || auth.role === "Warehouse_Staff")
-  ) {
-    return next({ name: "Home" });
+  const allowedRoles = to.meta.allowedRoles;
+  if (allowedRoles && !allowedRoles.includes(auth.role)) {
+    return auth.role === "Customer"
+      ? next({ name: "Home" })
+      : next({ name: "Dashboard" });
   }
 
   next();

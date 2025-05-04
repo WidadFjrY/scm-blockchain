@@ -57,7 +57,6 @@ async function getData() {
 
         carts.value = cartResponse.data.data
 
-        console.log(carts.value)
     } catch (error) {
         console.log(error)
     }
@@ -87,6 +86,14 @@ async function checkOutHandle() {
 
         for (const cart of carts.value) {
             await deleteCartHandle(cart.product_id);
+        }
+
+        for (let i = 0; i < productIds.length; i++) {
+            await axios.put(`${BACKEND_BASE_URL}/product/stock`, {
+                product_id: productIds[i],
+                stock_in: 0,
+                stock_out: quantities[i]
+            });
         }
 
         window.location.href = "/";

@@ -173,12 +173,12 @@ getDataUser()
             </div>
         </div>
     </div>
-    <SideBar></SideBar>
+    <SideBar v-if="user.role" :role="user.role"></SideBar>
 
     <div class="container">
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
 
-        <div class="card-container">
+        <div v-if="groupedTransaction" class="card-container">
             <table>
                 <thead>
                     <tr>
@@ -204,6 +204,9 @@ getDataUser()
                     </tr>
                 </template>
             </table>
+        </div>
+        <div class="card-container" v-else>
+            <h2 style="text-align: center; padding: 3rem;">Belum ada pesanan</h2>
         </div>
     </div>
 

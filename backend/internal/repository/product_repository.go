@@ -25,4 +25,6 @@ type ProductRepository interface {
 	GetCarts(ctx context.Context, tx *gorm.DB, userId string) []model.Cart
 	UpdateCartQty(ctx context.Context, tx *gorm.DB, cart model.Cart)
 	DeleteItemCart(ctx context.Context, tx *gorm.DB, productId string)
+
+	UpdateProductStock(ctx context.Context, tx *gorm.DB, productStock model.ProductStock)
 }

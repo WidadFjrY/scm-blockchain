@@ -45,8 +45,8 @@ type BrandCreateRequest struct {
 }
 
 type BrandCreateResponse struct {
-	BrandName string    `json:"brand_name"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        string `json:"id"`
+	BrandName string `json:"brand_name"`
 }
 
 type UnitCreateRequest struct {
@@ -54,8 +54,8 @@ type UnitCreateRequest struct {
 }
 
 type UnitCreateResponse struct {
-	UnitName  string    `json:"unit_name"`
-	CreatedAt time.Time `json:"created_at"`
+	ID       string `json:"id"`
+	UnitName string `json:"unit_name"`
 }
 
 type AddToCartRequest struct {
@@ -72,4 +72,10 @@ type CartResponse struct {
 
 type GetTotalProductResponse struct {
 	TotalProduct int64 `json:"total_product"`
+}
+
+type UpdateProductStockRequest struct {
+	ProductID string `json:"product_id" validate:"required"`
+	StockIn   int    `json:"stock_in" validate:"omitempty"`
+	StockOut  int    `json:"stock_out" validate:"omitempty"`
 }

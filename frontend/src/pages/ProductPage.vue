@@ -10,7 +10,7 @@ import NavBarDash from '@/components/NavBarDash.vue';
 
 const route = useRoute()
 const ethPrice = ref(null);
-
+const newStock = ref(0)
 const state = reactive({
     search: null,
     products: null,
@@ -75,6 +75,23 @@ async function ETHPrice() {
     }
 }
 
+async function stockUpdateHandle(productId) {
+    try {
+        await axios.put(`${BACKEND_BASE_URL}/product/stock`,
+            {
+                product_id: productId,
+                stock_in: newStock.value,
+                stock_out: 0
+            }
+        )
+        state.product.stock = state.product.stock + newStock.value
+        newStock.value = 0
+        await getAllPrduct()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 ETHPrice()
 getDataUser()
 getAllPrduct()
@@ -120,7 +137,7 @@ watch(
                     <p>Rp. {{ state.product.price.toLocaleString("id-ID") }}</p>
                     <p>{{ convertToETH(state.product.price) }} ETH</p>
                     <h3>Stok</h3>
-                    <p>{{ state.product.stock }}</p>
+                    <p>{{ state.product.stock.toLocaleString("id-ID") }}</p>
                     <h3>Satuan</h3>
                     <p>{{ state.product.unit }}</p>
                     <h3>Ditambahkan Pada</h3>
@@ -129,20 +146,30 @@ watch(
                 <div>
                     <h3>Gambar Produk</h3>
                     <div class="card">
-                        <img :src="`${BACKEND_BASE_URL}/${state.product.filepath}`" width="350" alt="">
+                        <img :src="`${BACKEND_BASE_URL}/${state.product.filepath}`" alt="">
                     </div>
+                    <template v-if="user.role === 'Warehouse_Staff'">
+                        <h3>Tambah Stok</h3>
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                            <input type="number" v-model="newStock">
+                            <button class="btn" @click.prevent="stockUpdateHandle(state.product.id)"
+                                :disabled="newStock < 1">
+                                <h1 class="add-stock">+</h1>
+                            </button>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
     </div>
 
-    <SideBar></SideBar>
+    <SideBar v-if="user.role" :role="user.role"></SideBar>
 
     <div class="container">
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
         <div v-if="state.products !== null">
-            <input type="text" placeholder="Cari Product" v-model="state.search">
             <h2>Daftar Produk</h2>
+            <input type="text" placeholder="Cari Product" v-model="state.search">
         </div>
         <div v-if="state.products !== null" class="card-container">
             <table>
@@ -161,7 +188,7 @@ watch(
                         <td>{{ index + 1 }}</td>
                         <td>{{ product.product_name }}</td>
                         <td>{{ product.brand }}</td>
-                        <td>{{ product.stock }}</td>
+                        <td>{{ product.stock.toLocaleString("id-ID") }}</td>
                         <td>Rp. {{ product.price.toLocaleString("id-ID") }}</td>
                         <td style="display: flex; justify-content: center;"><button
                                 @click.prevent="getProductById(product.id)">Lihat
@@ -312,13 +339,58 @@ button:hover,
     margin-top: 1.5rem;
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 4rem;
 }
 
 .modal .content .card {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     border-radius: 1rem;
+    width: 350px;
+    height: 350px;
     margin-top: 1rem;
+    overflow: hidden;
+}
+
+.modal .content .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal input {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    width: 100% !important;
+    height: 3rem;
+    border-radius: 0.5rem;
+    border: none;
+    outline: none;
+    color: var(--dark-color);
+    background-color: #f2f2f2;
+    font-size: 1.3rem;
+}
+
+.modal .btn {
+    background-color: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 50px;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+}
+
+.modal button:disabled {
+    cursor: not-allowed;
+    background-color: rgb(154, 235, 255);
+}
+
+.modal .add-stock {
+    font-size: 2.5rem;
+    color: white;
+    font-weight: 400;
 }
 </style>

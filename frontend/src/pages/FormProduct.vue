@@ -13,8 +13,9 @@ const router = useRouter()
 
 const brands = ref([]);
 const units = ref([]);
+const newUnitName = ref("")
+const newBrandName = ref("")
 const fileName = ref("Pilih Gambar");
-
 const formProduct = ref({
     product_name: "",
     brand_id: "",
@@ -113,9 +114,49 @@ async function addProductHandle() {
 
 }
 
+async function addUnitHandle() {
+    try {
+        const response = await axios.post(`${BACKEND_BASE_URL}/unit/add`, {
+            unit_name: newUnitName.value
+        })
+
+        units.value.push(response.data.data)
+        newUnitName.value = ""
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function addBrandHandle() {
+    try {
+        const response = await axios.post(`${BACKEND_BASE_URL}/brand/add`, {
+            brand_name: newBrandName.value
+        })
+
+        brands.value.push(response.data.data)
+        newBrandName.value = ""
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function isFormProductEmpty() {
+    const product = formProduct.value;
+    return (
+        product.product_name.trim() !== "" &&
+        product.brand_id !== "" &&
+        product.price > 0 &&
+        product.unit_id !== "" &&
+        product.stock > 0 &&
+        product.description.trim() !== "" &&
+        product.image !== null
+    );
+}
+
+
 </script>
 <template>
-    <SideBar></SideBar>
+    <SideBar v-if="user.role" :role="user.role"></SideBar>
     <div class="container">
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
         <h2>Informasi Produk</h2>
@@ -129,15 +170,26 @@ async function addProductHandle() {
                 <div>
                     <label for="brand_id">Merek</label>
                     <select name="brand_id" id="brand_id" v-model="formProduct.brand_id">
+                        <option disabled value="">-- Pilih Merek/Brand --</option>
                         <option v-for="(brand, index) in brands" :key="index" :value="brand.id">{{
                             brand.brand_name }}</option>
                     </select>
+                    <div style="margin-top: 8px; display: flex; align-items: center; width: 100%; gap: 0.5rem;">
+                        <input style="margin-top: 0;" type="text" v-model="newBrandName"
+                            placeholder="Tambah merek baru..." />
+                        <button @click.prevent="addBrandHandle" class="btn-add" :disabled="newBrandName === ''">Tambah
+                            Merek</button>
+                    </div>
                 </div>
             </div>
             <div class="card">
                 <div>
                     <label for="price">Harga</label>
-                    <input required type="number" name="price" id="price" v-model="formProduct.price">
+                    <div style="position: relative; width: 100%;">
+                        <input style="padding-left: 3.5rem;" required type="number" name="price" id="price"
+                            v-model="formProduct.price">
+                        <p style="position: absolute; top: 1rem; left: 1rem; font-size: 1.3rem;">Rp. </p>
+                    </div>
                 </div>
                 <div>
                     <label for="stock">Stok</label>
@@ -147,11 +199,18 @@ async function addProductHandle() {
 
             <div class="card">
                 <div>
-                    <label for="brand_id">Satuan</label>
-                    <select name="brand_id" id="brand_id" v-model="formProduct.unit_id">
+                    <label for="unit">Satuan</label>
+                    <select name="unit" id="unit" v-model="formProduct.unit_id">
+                        <option disabled value="">-- Pilih satuan --</option>
                         <option v-for="(unit, index) in units" :key="index" :value="unit.id">{{
                             unit.unit_name }}</option>
                     </select>
+                    <div style="margin-top: 8px; display: flex; align-items: center; width: 100%; gap: 0.5rem;">
+                        <input style="margin-top: 0;" type="text" v-model="newUnitName"
+                            placeholder="Tambah satuan baru..." />
+                        <button @click.prevent="addUnitHandle" class="btn-add" :disabled="newUnitName === ''">Tambah
+                            Unit</button>
+                    </div>
                 </div>
                 <div>
                     <label>Gambar</label>
@@ -169,7 +228,8 @@ async function addProductHandle() {
                 </div>
 
             </div>
-            <button @click.prevent="addProductHandle">Tambah Produk</button>
+            <button @click.prevent="addProductHandle" class="btn-add-product" :disabled="!isFormProductEmpty()">Tambah
+                Produk</button>
         </form>
     </div>
 </template>
@@ -302,5 +362,16 @@ textarea {
     background: rgb(32, 193, 243);
     background: linear-gradient(90deg, rgba(32, 193, 243, 1) 23%, rgba(32, 125, 243, 1) 72%);
 
+}
+
+.btn-add {
+    background: var(--background) !important;
+    margin-top: 0 !important;
+    font-size: 1.3rem !important;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 </style>

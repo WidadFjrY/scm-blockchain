@@ -31,15 +31,22 @@ func (repo *ProductRepositoryImpl) ProductCreate(ctx context.Context, tx *gorm.D
 
 func (repo *ProductRepositoryImpl) BrandCreate(ctx context.Context, tx *gorm.DB, Brand model.ProductBrand) {
 	err := tx.WithContext(ctx).Create(&Brand).Error
-	if strings.Contains(err.Error(), "Duplicate entry") {
-		panic(exception.NewBadRequestError("Brand already exsits!"))
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			panic(exception.NewBadRequestError("Brand already exists!"))
+		}
+		panic(err)
 	}
 }
 
-func (repo *ProductRepositoryImpl) UnitCreate(ctx context.Context, tx *gorm.DB, Unit model.ProductUnit) {
-	err := tx.WithContext(ctx).Create(&Unit).Error
-	if strings.Contains(err.Error(), "Duplicate entry") {
-		panic(exception.NewBadRequestError("Unit already exsits!"))
+func (repo *ProductRepositoryImpl) UnitCreate(ctx context.Context, tx *gorm.DB, unit model.ProductUnit) {
+	err := tx.WithContext(ctx).Create(&unit).Error
+
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			panic(exception.NewBadRequestError("Unit already exists!"))
+		}
+		panic(err)
 	}
 }
 
@@ -128,4 +135,32 @@ func (repo *ProductRepositoryImpl) GetTotalProducts(ctx context.Context, tx *gor
 
 	helper.Err(tx.WithContext(ctx).Table("products").Count(&totalProducts).Error)
 	return totalProducts
+}
+
+func (repo *ProductRepositoryImpl) UpdateProductStock(ctx context.Context, tx *gorm.DB, productStock model.ProductStock) {
+	var latestStock model.ProductStock
+	helper.Err(tx.WithContext(ctx).Where("product_id = ?", productStock.ProductID).Order("updated_at DESC").First(&latestStock).Error)
+
+	if productStock.StockIn > 0 {
+		newProductStock := model.ProductStock{
+			ID:         productStock.ID,
+			ProductID:  productStock.ProductID,
+			StockIn:    productStock.StockIn,
+			StockTotal: latestStock.StockTotal + productStock.StockIn,
+			UpdatedAt:  time.Now(),
+		}
+		helper.Err(tx.WithContext(ctx).Create(&newProductStock).Error)
+	} else if productStock.StockOut > 0 {
+		if productStock.StockOut > latestStock.StockTotal {
+			panic(exception.NewBadRequestError("stock out exceeds total stock"))
+		}
+		newProductStock := model.ProductStock{
+			ID:         productStock.ID,
+			ProductID:  productStock.ProductID,
+			StockOut:   productStock.StockOut,
+			StockTotal: latestStock.StockTotal - productStock.StockOut,
+			UpdatedAt:  time.Now(),
+		}
+		helper.Err(tx.WithContext(ctx).Create(&newProductStock).Error)
+	}
 }
