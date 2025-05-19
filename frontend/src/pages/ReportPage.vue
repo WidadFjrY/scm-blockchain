@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import axios from 'axios';
 
@@ -23,6 +23,9 @@ const selectedDate = ref()
 const selectedTransactionIndex = ref()
 const products = ref([])
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
+const dailyProfits = ref({})
+const ethPrice = ref();
+const receipt = ref()
 
 async function getDataUser() {
     try {
@@ -65,15 +68,26 @@ async function getTransaction() {
             id: parseInt(tx.id),
             quantities: tx.quantities.map(q => parseInt(q)),
             totalPrice: web3.utils.fromWei(tx.totalPrice, 'ether'),
-            timestamp: parseInt(tx.timestamp)
+            timestamp: parseInt(tx.timestamp),
+            blockNumber: Number(tx.blockNumber)
         }));
 
         groupedTransaction.value = groupTransactionsByDate(transactions);
-        console.log(groupedTransaction.value);
+        console.log(transactions);
     } catch (error) {
         console.error("Gagal mengambil transaksi selesai:", error);
     }
 }
+
+async function getTransactionReceipt(blockNumber) {
+    const response = await axios.get(`${BACKEND_BASE_URL}/user/tx/${blockNumber}`)
+    if (!response.data.data) {
+        receipt.value = {}
+        return
+    }
+    receipt.value = response.data.data
+}
+
 
 function maskAddress(address) {
     if (!address || address.length < 10) return address
@@ -102,11 +116,12 @@ async function getDataUserByETHAddr(addr) {
 async function selectedTransactionHandle(transactions, date, index) {
     isModalOpen.value = true
     await getDataUserByETHAddr(transactions.buyer)
+    await getTransactionReceipt(transactions.blockNumber)
+
     selectedTransaction.value = transactions
     selectedTransactionIndex.value = index
     selectedDate.value = date
 
-    console.log(groupedTransaction.value[date][index].productIds)
     groupedTransaction.value[date][index].productIds.forEach(productId => {
         getProduct(productId)
     });
@@ -116,8 +131,53 @@ function clearProduct() {
     products.value.length = 0
 }
 
+function dailyTotals() {
+    const totals = {};
+    for (const [date, transactions] of Object.entries(groupedTransaction.value)) {
+        if (Array.isArray(transactions)) {
+            totals[date] = transactions.reduce((sum, t) => {
+                // t.totalPrice bisa berupa string atau BigInt
+                const price = typeof t.totalPrice === 'string'
+                    ? parseFloat(t.totalPrice)
+                    : fromWei(t.totalPrice);
+                return sum + price;
+            }, 0);
+        } else {
+            totals[date] = 0;
+        }
+    }
+    return totals;
+}
+
+function fromWei(wei) {
+    return Number(wei) / 1e18;
+}
+
+watch(dailyTotals, (val) => {
+    dailyProfits.value = val
+});
+
+
+async function ETHPrice() {
+    try {
+        const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=idr");
+        ethPrice.value = response.data.ethereum.idr;
+    } catch (error) {
+        ethPrice.value = "loading..."
+        console.log(error)
+    }
+}
+
+const convertToIDR = (ethAmount) => {
+    return ethPrice.value ? Math.round(ethAmount * ethPrice.value) : "Loading...";
+};
+
+
+
+dailyTotals()
 getTransaction()
 getDataUser()
+ETHPrice()
 
 </script>
 
@@ -129,7 +189,7 @@ getDataUser()
                 <button @click="isModalOpen = !isModalOpen, clearProduct()" class="btn-close">X</button>
             </div>
             <div class="content">
-                <div style="width: 100%;">
+                <div style="width: 50%;">
                     <h3>ID Transaksi</h3>
                     <p>{{ groupedTransaction[selectedDate][selectedTransactionIndex].id }}</p>
                     <h3>Nama Pembeli</h3>
@@ -160,7 +220,7 @@ getDataUser()
                         </div>
                     </div>
                 </div>
-                <div style="width: 100%;">
+                <div style="width: 50%;">
                     <div>
                         <h3>Total Harga</h3>
                         <p>{{ groupedTransaction[selectedDate][selectedTransactionIndex].totalPrice }} ETH</p>
@@ -168,6 +228,19 @@ getDataUser()
                         <p>{{ groupedTransaction[selectedDate][selectedTransactionIndex].status }}</p>
                         <h3>Tanggal Pembelian</h3>
                         <p>{{ selectedDate }}</p>
+                    </div>
+                    <h2 style="margin-top: 2rem;">Informasi Blockchain</h2>
+                    <div>
+                        <h3>Transaction Hash</h3>
+                        <p class="tx-hash">{{ receipt.tx_hash }}</p>
+                    </div>
+                    <div>
+                        <h3>Nomor Blok</h3>
+                        <p>{{ receipt.block_number }}</p>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <a :href="/verification/ + receipt.tx_hash" target="_blank" class="btn-verify">Lihat Detail
+                            Blok</a>
                     </div>
                 </div>
             </div>
@@ -201,6 +274,11 @@ getDataUser()
                                 @click.prevent="selectedTransactionHandle(transaction, date, index)">Lihat
                                 Detail</button>
                         </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; font-weight: bold;">Total Uang Masuk :</td>
+                        <td style="font-weight: bold;">{{ dailyProfits[date] }} ETH / Rp.
+                            {{ convertToIDR(dailyProfits[date]).toLocaleString("ID-id") }}</td>
                     </tr>
                 </template>
             </table>
@@ -315,7 +393,6 @@ table button {
     gap: 4rem;
 }
 
-
 .modal select {
     width: 100%;
     height: 3rem;
@@ -325,5 +402,21 @@ table button {
     font-size: 1.2rem;
     padding: 0 1rem;
     border-radius: 1.5rem;
+}
+
+.btn-verify {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem !important;
+    background-color: #10B981;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.tx-hash {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 </style>

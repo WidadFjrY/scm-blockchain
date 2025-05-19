@@ -11,9 +11,10 @@ import (
 func ValidationToken(tokenStr string) (*web.JwtClaims, error) {
 	godotenv.Load()
 
-	token, err := jwt.ParseWithClaims(tokenStr, &web.JwtClaims{}, func(tokenStr *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("SECRET_KEY")), nil
-	})
+	token, err := jwt.ParseWithClaims(tokenStr, &web.JwtClaims{},
+		func(tokenStr *jwt.Token) (interface{}, error) {
+			return []byte(os.Getenv("SECRET_KEY")), nil
+		})
 
 	if claims, ok := token.Claims.(*web.JwtClaims); ok && token.Valid {
 		return claims, nil

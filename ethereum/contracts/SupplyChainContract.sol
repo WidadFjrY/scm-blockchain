@@ -24,6 +24,7 @@ contract SupplyChainContract {
         string shippingAddress;
         uint256 timestamp;
         string status;
+        uint256 blockNumber;
     }
 
     mapping(address => User) public users;
@@ -52,7 +53,8 @@ contract SupplyChainContract {
         uint256 totalPrice,
         string shippingAddress,
         uint256 timestamp,
-        string status
+        string status,
+        uint256 blockNumber
     );
     event TransactionStatusUpdated(
         uint256 indexed transactionId,
@@ -188,7 +190,8 @@ contract SupplyChainContract {
             msg.value,
             _shippingAddress,
             block.timestamp,
-            "Pending"
+            "Pending",
+            block.number
         );
 
         payable(admin).transfer(msg.value);
@@ -201,7 +204,42 @@ contract SupplyChainContract {
             msg.value,
             _shippingAddress,
             block.timestamp,
-            "Pending"
+            "Pending",
+            block.number
+        );
+    }
+
+    function createTransactionWithOtherPayments(
+        string[] memory _productIds,
+        uint256[] memory _quantities,
+        string memory _shippingAddress
+    ) public payable {
+        require(_productIds.length == _quantities.length, "Invalid input");
+        require(_productIds.length > 0, "No products specified");
+
+        transactionCounter++;
+        transactions[transactionCounter] = Transaction(
+            transactionCounter,
+            msg.sender,
+            _productIds,
+            _quantities,
+            0,
+            _shippingAddress,
+            block.timestamp,
+            "Pending",
+            block.number
+        );
+
+        emit TransactionCreated(
+            transactionCounter,
+            msg.sender,
+            _productIds,
+            _quantities,
+            0,
+            _shippingAddress,
+            block.timestamp,
+            "Pending",
+            block.number
         );
     }
 
@@ -213,37 +251,6 @@ contract SupplyChainContract {
         transactions[_transactionId].status = _status;
 
         emit TransactionStatusUpdated(_transactionId, _status);
-    }
-
-    function getTransaction(
-        uint256 _transactionId
-    )
-        public
-        view
-        returns (
-            uint256,
-            address,
-            string[] memory,
-            uint256[] memory,
-            uint256,
-            string memory,
-            uint256,
-            string memory
-        )
-    {
-        require(transactions[_transactionId].id != 0, "Transaction not found");
-
-        Transaction memory txn = transactions[_transactionId];
-        return (
-            txn.id,
-            txn.buyer,
-            txn.productIds,
-            txn.quantities,
-            txn.totalPrice,
-            txn.shippingAddress,
-            txn.timestamp,
-            txn.status
-        );
     }
 
     function getTransactionsByBuyer(

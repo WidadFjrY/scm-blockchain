@@ -96,7 +96,18 @@ async function checkOutHandle() {
             });
         }
 
-        window.location.href = "/";
+        const receipt = await web3.eth.getTransactionReceipt(tx.transactionHash);
+
+        try {
+            await axios.post(`${BACKEND_BASE_URL}/user/tx`, {
+                tx_hash: tx.transactionHash,
+                block_address: receipt.blockHash,
+                block_number: Number(receipt.blockNumber),
+            })
+        } catch (errorAPI) {
+            console.log(errorAPI)
+        }
+        window.location.href = "/"
     } catch (error) {
         console.error("Transaksi gagal:", error);
     }

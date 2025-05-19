@@ -230,6 +230,37 @@ func (serv *UserServiceImpl) GetCountUser(ctx context.Context) web.GetCountUserR
 	return countUser
 }
 
+// CreateUserTx implements UserService.
+func (serv *UserServiceImpl) CreateUserTx(ctx context.Context, request web.CreateUserTxRequest) {
+	valErr := serv.Validator.Struct(&request)
+	helper.ValError(valErr)
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		serv.UserRepo.CreateUserTx(ctx, tx, model.UserTx{
+			TxHash:       request.TxHash,
+			BlockAddress: request.BlockAddress,
+			BlockNumber:  request.BlockNumber,
+		})
+		return nil
+	}))
+}
+
+// GetUserTx implements UserService.
+func (serv *UserServiceImpl) GetUserTx(ctx context.Context, blockNumber int) web.GetUserTxResponse {
+	var userTx model.UserTx
+
+	helper.Err(serv.DB.Transaction(func(tx *gorm.DB) error {
+		userTx = serv.UserRepo.GetUserTx(ctx, tx, blockNumber)
+		return nil
+	}))
+
+	return web.GetUserTxResponse{
+		TxHash:       userTx.TxHash,
+		BlockAddress: userTx.BlockAddress,
+		BlockNumber:  userTx.BlockNumber,
+	}
+}
+
 /*
 				func (serv *UserServiceImpl) GetUserByManager(ctx context.Context, role string) []web.UserGetResponse {
 	var users []web.UserGetResponse

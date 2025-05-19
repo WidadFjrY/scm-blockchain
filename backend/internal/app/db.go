@@ -50,6 +50,7 @@ func NewDB() *gorm.DB {
 		&model.ProductPrice{},
 		&model.ProductStock{},
 		&model.Cart{},
+		&model.UserTx{},
 	)
 
 	return db

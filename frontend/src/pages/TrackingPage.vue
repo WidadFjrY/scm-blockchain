@@ -59,7 +59,8 @@ async function getUserTransactions() {
                 quantities: transactions[i][3][0].toLocaleString(),
                 totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
                 timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
-                status: transactions[i][7]
+                status: transactions[i][7],
+                txHash: await getTransactionReceipt(transactions[i][8])
             });
 
             transactions[i][2].forEach(productId => {
@@ -72,6 +73,15 @@ async function getUserTransactions() {
     } catch (error) {
         console.error("Gagal mengambil transaksi:", error);
     }
+}
+
+async function getTransactionReceipt(blockNumber) {
+    const response = await axios.get(`${BACKEND_BASE_URL}/user/tx/${blockNumber}`)
+    if (!response.data.data) {
+        receipt.value = {}
+        return
+    }
+    return response.data.data.tx_hash
 }
 
 async function getProduct(trxId, productId) {
@@ -127,7 +137,7 @@ getDataUser()
         </div>
         <div class="card-container" v-if="groupedTransactions.length > 0">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product">
-                <div style="display: flex; align-items: center; gap:2rem">
+                <div style="display: flex; align-items: center; gap:2rem; margin-top: 1rem;">
                     <div class="card-img">
                         <img :src="`${BACKEND_BASE_URL}/${transactions.products[0].data.filepath}`" alt="">
                     </div>
@@ -139,6 +149,11 @@ getDataUser()
                         <h3>{{ transactionsArray[index].totalPrice }} ETH</h3>
                         <p>{{ transactionsArray[index].timestamp }}</p>
                         <p>Terverifikasi di Blockchain ✔️</p>
+                        <div style="margin-top: 1rem;">
+                            <a :href="/verification/ + transactionsArray[index].txHash" target="_blank"
+                                class="btn-verify">Lihat Detail
+                                Blok</a>
+                        </div>
                     </div>
                 </div>
                 <h1 :class="getStatusClass(transactionsArray[index].status)">{{ transactionsArray[index].status }}</h1>
@@ -210,5 +225,21 @@ p {
 
 .selesai {
     color: #10B981;
+}
+
+.btn-verify {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem !important;
+    background-color: #10B981;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.tx-hash {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 </style>

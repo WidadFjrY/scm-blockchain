@@ -58,3 +58,15 @@ type UserUpdatePasswordRequest struct {
 type GetCountUserResponse struct {
 	TotalUser int64 `json:"total_user"`
 }
+
+type CreateUserTxRequest struct {
+	TxHash       string `json:"tx_hash" validate:"required"`
+	BlockAddress string `json:"block_address" validate:"required"`
+	BlockNumber  int    `json:"block_number" validate:"required"`
+}
+
+type GetUserTxResponse struct {
+	TxHash       string `json:"tx_hash"`
+	BlockAddress string `json:"block_address"`
+	BlockNumber  int    `json:"block_number"`
+}

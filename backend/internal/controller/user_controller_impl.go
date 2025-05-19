@@ -7,6 +7,7 @@ import (
 	"scm-blockchain-ethereum/internal/service"
 	"scm-blockchain-ethereum/pkg/exception"
 	"scm-blockchain-ethereum/pkg/helper"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -100,6 +101,23 @@ func (contr *UserControllerImpl) GetUserByETHAddr(ctx *gin.Context) {
 
 func (contr *UserControllerImpl) GetCountUser(ctx *gin.Context) {
 	response := contr.UserServ.GetCountUser(ctx.Request.Context())
+	helper.Response(ctx, http.StatusOK, "Ok", response)
+}
+
+func (contr *UserControllerImpl) CreateUserTx(ctx *gin.Context) {
+	var request web.CreateUserTxRequest
+	err := ctx.ShouldBind(&request)
+	helper.Err(err)
+
+	contr.UserServ.CreateUserTx(ctx.Request.Context(), request)
+	helper.Response(ctx, http.StatusCreated, "Created", "")
+}
+
+func (contr *UserControllerImpl) GetUserTx(ctx *gin.Context) {
+	blockNumber := ctx.Params.ByName("block_number")
+	blockNumberInt, _ := strconv.Atoi(blockNumber)
+
+	response := contr.UserServ.GetUserTx(ctx.Request.Context(), blockNumberInt)
 	helper.Response(ctx, http.StatusOK, "Ok", response)
 }
 

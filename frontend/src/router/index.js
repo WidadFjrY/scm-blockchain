@@ -10,6 +10,7 @@ import FormProduct from "@/pages/FormProduct.vue";
 import Cart from "@/pages/CartPage.vue";
 import Tracking from "@/pages/TrackingPage.vue";
 import TransactionHistory from "@/pages/TransactionHistoryPage.vue";
+import TxHashRecipt from "@/pages/TxHashReciptPage.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -78,6 +79,11 @@ const routes = [
     name: "Laporan",
     component: Report,
     meta: { allowedRoles: ["Admin"] },
+  },
+  {
+    path: "/verification/:txHash",
+    name: "TX Hash",
+    component: TxHashRecipt,
   },
 ];
 

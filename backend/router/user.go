@@ -22,6 +22,8 @@ func UserRouter(router *gin.Engine, db *gorm.DB, contrl controller.UserControlle
 		auth.GET("/api/users", contrl.GetAll)
 		auth.GET("/api/user/eth_addr/:addr", contrl.GetUserByETHAddr)
 		auth.GET("/api/user/count", contrl.GetCountUser)
+		auth.POST("/api/user/tx", contrl.CreateUserTx)
+		auth.GET("/api/user/tx/:block_number", contrl.GetUserTx)
 		// 	auth.GET("/api/users/manager", contrl.GetUserByManager)
 		// 	auth.PUT("/api/user", contrl.UpdateById)
 		// 	auth.PUT("/api/user/password", contrl.UpdatePasswordById)

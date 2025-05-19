@@ -15,3 +15,8 @@ type User struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
+type UserTx struct {
+	TxHash       string `gorm:"primaryKey;type:char(66);not null"`
+	BlockAddress string `gorm:"type:char(66);not null"`
+	BlockNumber  int    `gorm:"not null"`
+}

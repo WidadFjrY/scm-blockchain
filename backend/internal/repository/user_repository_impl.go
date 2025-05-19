@@ -124,3 +124,17 @@ func (repo *UserRepositoryImpl) CountUser(ctx context.Context, tx *gorm.DB) int6
 
 	return totalUser
 }
+
+func (repo *UserRepositoryImpl) CreateUserTx(ctx context.Context, tx *gorm.DB, userTx model.UserTx) {
+	helper.Err(tx.WithContext(ctx).Create(&userTx).Error)
+}
+
+func (repo *UserRepositoryImpl) GetUserTx(ctx context.Context, tx *gorm.DB, blockNumber int) model.UserTx {
+	var userTx model.UserTx
+	result := tx.WithContext(ctx).Where("block_number = ?", blockNumber).First(&userTx)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		panic(exception.NewNotFoundError(fmt.Sprintf("block %d not found", blockNumber)))
+	}
+
+	return userTx
+}

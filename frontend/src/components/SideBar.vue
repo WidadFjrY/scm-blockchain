@@ -13,7 +13,7 @@ const route = useRoute()
 const appName = import.meta.env.VITE_APP_NAME
 const links = ref([
     { name: "Dashboard", link: "/dashboard", icon: '/assets/icon/Dashboard.png', isVisible: props.role === "Admin" || props.role === "Warehouse_Staff" },
-    { name: "Manajemen Pesanan", link: "/orders", icon: '/assets/icon/Manajemen Pesanan.png', isVisible: props.role === "Admin" || props.role === "Warehouse_Staff" },
+    { name: "Manajemen Pesanan", link: "/orders", icon: '/assets/icon/Manajemen Pesanan.png', isVisible: props.role === "Admin" },
     { name: "Produk", link: "/products", icon: '/assets/icon/Produk.png', isVisible: props.role === "Admin" || props.role === "Warehouse_Staff" },
     { name: "Laporan", link: "/reports", icon: '/assets/icon/Laporan.png', isVisible: props.role === "Admin" },
     { name: "Pengguna", link: "/users", icon: '/assets/icon/Pengguna.png', isVisible: props.role === "Admin" || props.role === "Warehouse_Staff" },

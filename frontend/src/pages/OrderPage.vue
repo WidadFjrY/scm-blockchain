@@ -18,6 +18,7 @@ const selectedTransaction = ref();
 const selectedTransactionIndex = ref(0)
 const status = ref("")
 const userTrx = ref({})
+const receipt = ref({})
 const user = ref({
     name: "",
     ethAddr: "",
@@ -53,7 +54,8 @@ async function getAllPendingTransactions() {
                 totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
                 shippingAddress: transactions[i][5],
                 timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
-                status: transactions[i][7]
+                status: transactions[i][7],
+                blockNumber: transactions[i][8]
             });
 
             transactionsArray.value[i].productIds.forEach(productId => {
@@ -62,12 +64,20 @@ async function getAllPendingTransactions() {
         }
 
         await Promise.all(productPromises);
-
         groupTransactions();
 
     } catch (error) {
         console.error("Gagal mengambil transaksi yang belum selesai:", error);
     }
+}
+
+async function getTransactionReceipt(blockNumber) {
+    const response = await axios.get(`${BACKEND_BASE_URL}/user/tx/${blockNumber}`)
+    if (!response.data.data) {
+        receipt.value = {}
+        return
+    }
+    receipt.value = response.data.data
 }
 
 
@@ -146,19 +156,17 @@ getAllPendingTransactions();
     <div v-if="isModalOpen" class="modal-overlay" @click.self="isModalOpen = !isModalOpen">
         <div class="modal" id="modal">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Detail Product</h2>
+                <h2>Detail Pesanan</h2>
                 <button @click="isModalOpen = !isModalOpen" class="btn-close">X</button>
             </div>
             <div class="content">
-                <div style="width: 100%;">
+                <div style="width: 50%;">
                     <h3>ID Transaksi</h3>
                     <p>{{ transactionsArray[selectedTransactionIndex].id }}</p>
                     <h3>Nama Pembeli</h3>
                     <p>{{ userTrx.name }}</p>
-                    <h3>Alamat ETH</h3>
-                    <p>{{ transactionsArray[selectedTransactionIndex].buyer }}</p>
                     <h3>Alamat Pengiriman</h3>
-                    <p>{{ transactionsArray[selectedTransactionIndex].shippingAddress }}</p>
+                    <p class="addrs">{{ transactionsArray[selectedTransactionIndex].shippingAddress }}</p>
                     <h3>No. Telepon</h3>
                     <p>{{ userTrx.telp }}</p>
                     <h3>Produk:</h3>
@@ -183,7 +191,7 @@ getAllPendingTransactions();
                     </div>
 
                 </div>
-                <div style="width: 100%;">
+                <div style="width: 50%;">
                     <div>
                         <h3>Total Harga</h3>
                         <p>{{ transactionsArray[selectedTransactionIndex].totalPrice }} ETH</p>
@@ -192,13 +200,25 @@ getAllPendingTransactions();
                         <h3>Ubah Status</h3>
                         <select name="status" id="status" v-model="status">
                             <option disabled value="">-- Pilih status --</option>
-                            <option value="Proses">Proses</option>
                             <option value="Pengiriman">Pengiriman</option>
                             <option value="Selesai">Selesai</option>
                         </select>
                     </div>
                     <button class="btn-update"
                         @click.prevent="updateHandle(transactionsArray[selectedTransactionIndex].id)">Update</button>
+                    <h2 style="margin-top: 2rem;">Informasi Blockchain</h2>
+                    <div>
+                        <h3>Transaction Hash</h3>
+                        <p class="tx-hash">{{ receipt.tx_hash }}</p>
+                    </div>
+                    <div>
+                        <h3>Nomor Blok</h3>
+                        <p>{{ receipt.block_number }}</p>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <a :href="/verification/ + receipt.tx_hash" target="_blank" class="btn-verify">Lihat Detail
+                            Blok</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -210,7 +230,7 @@ getAllPendingTransactions();
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
         <div class="card-container" v-if="groupedTransactions.length != 0">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product"
-                @click.prevent="selectedTransactionHandle(transactions, index)">
+                @click.prevent="selectedTransactionHandle(transactions, index), getTransactionReceipt(Number(transactionsArray[index].blockNumber))">
                 <div style="display: flex; align-items: center; gap:2rem">
                     <div class="card-img">
                         <img :src="`${BACKEND_BASE_URL}/${transactions.products[0].data.filepath}`" alt="">
@@ -313,7 +333,7 @@ p {
 
 .modal {
     background-color: white;
-    width: 70%;
+    width: 90%;
     padding: 3rem;
     border-radius: 1rem;
     transition: 0.5;
@@ -371,5 +391,22 @@ p {
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+.btn-verify {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem !important;
+    background-color: #10B981;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.tx-hash,
+.addrs {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 </style>

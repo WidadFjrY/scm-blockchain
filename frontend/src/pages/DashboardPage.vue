@@ -63,7 +63,7 @@ async function getTotal() {
 async function getAllPrduct() {
     try {
         const response = await axios.get(`${BACKEND_BASE_URL}/products`)
-        products.value = response.data.data;
+        products.value = response.data.data.sort((a, b) => a.stock - b.stock);
     } catch (error) {
         console.log(error)
     }
@@ -138,59 +138,72 @@ getTotal()
         <div class="list-table">
             <div class="list-product">
                 <h2>Daftar Stok Barang</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>ID Barang</th>
-                            <th>Nama</th>
-                            <th>Stok</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-if="products.length === 0">
-                            <td colspan="4" style="text-align: center; color: gray;">Belum ada produk</td>
-                        </tr>
-                        <tr v-else v-for="(product, index) in products" :key="product.id">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ product.id }}</td>
-                            <td>{{ product.product_name }}</td>
-                            <td :style="product.stock < 10 ? 'color: red;' : 'color: var(--dark-color)'">{{
-                                product.stock }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="product-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>ID Barang</th>
+                                <th>Nama</th>
+                                <th>Stok</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="!products">
+                                <td colspan="4" style="text-align: center; color: gray;">Belum ada produk</td>
+                            </tr>
+                            <tr v-else v-for="(product, index) in products.slice(0, 5)" :key="product.id">
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.product_name }}</td>
+                                <td :style="product.stock < 10 ? 'color: red;' : 'color: var(--dark-color)'">{{
+                                    product.stock }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1rem;">
+                        <router-link to="/products" style="color: var(--background); font-size: 1.3rem; ">Lihat
+                            semua></router-link>
+                    </div>
+                </div>
             </div>
             <div class="list-order">
                 <h2>Daftar Pesanan Aktif</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Barang</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-if="transactionsArray.length === 0">
-                            <td colspan="3" style="text-align: center; color: gray;">Belum ada pesanan</td>
-                        </tr>
-                        <tr v-else v-for="(transaction, index) in transactionsArray" :key="transaction.id">
-                            <td>{{ transaction.id }}</td>
-                            <td>
-                                {{ product[0].data.product_name }}
-                                {{ transaction.productIds.length - 1 === 0 ? "" : `+${transaction.productIds.length - 1}
-                                lainnya` }}
-                            </td>
-                            <td>
-                                <div :class="getStatusClass(transaction.status)">
-                                    {{ transaction.status }}
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                <div class="order-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Barang</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="transactionsArray.length === 0">
+                                <td colspan="3" style="text-align: center; color: gray;">Belum ada pesanan</td>
+                            </tr>
+                            <tr v-else v-for="(transaction, index) in transactionsArray.slice(0, 5)"
+                                :key="transaction.id">
+                                <td>{{ transaction.id }}</td>
+                                <td>
+                                    {{ product[0].data.product_name }}
+                                    {{ transaction.productIds.length - 1 === 0 ? "" : `+${transaction.productIds.length
+                                        - 1}
+                                    lainnya` }}
+                                </td>
+                                <td>
+                                    <div :class="getStatusClass(transaction.status)">
+                                        {{ transaction.status }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1rem;">
+                        <router-link to="/orders" style="color: var(--background); font-size: 1.3rem; ">Lihat
+                            semua></router-link>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -240,8 +253,8 @@ getTotal()
     width: 49%;
 }
 
-
-table {
+.order-content,
+.product-content {
     margin-top: 0.5rem;
     width: 100%;
     background-color: white;
@@ -249,6 +262,10 @@ table {
     border-radius: 1rem;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
+}
+
+table {
+    width: 100%;
 }
 
 table th,

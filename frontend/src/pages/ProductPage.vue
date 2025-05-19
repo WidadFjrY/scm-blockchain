@@ -122,7 +122,7 @@ watch(
     <div v-if="isModalOpen" class="modal-overlay" @click.self="isModalOpen = !isModalOpen">
         <div class="modal" id="modal">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Detail Product</h2>
+                <h2>Detail Barang</h2>
                 <button @click="isModalOpen = !isModalOpen" class="btn-close">X</button>
             </div>
             <div class="content">

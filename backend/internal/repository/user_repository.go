@@ -18,4 +18,6 @@ type UserRepository interface {
 	UpdatePassword(ctx context.Context, tx *gorm.DB, newPassword string, userId string)
 	GetUserByETHAddr(ctx context.Context, tx *gorm.DB, addr string) model.User
 	CountUser(ctx context.Context, tx *gorm.DB) int64
+	CreateUserTx(ctx context.Context, tx *gorm.DB, userTx model.UserTx)
+	GetUserTx(ctx context.Context, tx *gorm.DB, blockNumber int) model.UserTx
 }

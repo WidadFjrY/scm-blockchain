@@ -13,14 +13,3 @@ func Response(ctx *gin.Context, code int, status string, response interface{}) {
 		Data:   response,
 	})
 }
-
-func ResponseWithPage(ctx *gin.Context, code int, status string, response interface{}, page int, totalPage int, totalItem int64) {
-	ctx.JSON(code, web.SuccessResponseWithPage{
-		Code:       code,
-		Status:     status,
-		Data:       response,
-		Page:       page,
-		TotalPages: totalPage,
-		TotalItems: totalItem,
-	})
-}

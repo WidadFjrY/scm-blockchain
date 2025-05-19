@@ -154,8 +154,8 @@ watch(
 
                 <label for="role">Peran</label>
                 <select name="role" id="role" v-model="registerForm.role">
+                    <option disabled value="">--Pilih Peran--</option>
                     <option value="Admin">Admin</option>
-                    <option value="Owner">Owner</option>
                     <option value="Warehouse_Staff">Petugas Gudang</option>
                 </select>
 
