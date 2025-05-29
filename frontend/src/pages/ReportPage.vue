@@ -67,13 +67,13 @@ async function getTransaction() {
             ...tx,
             id: parseInt(tx.id),
             quantities: tx.quantities.map(q => parseInt(q)),
-            totalPrice: web3.utils.fromWei(tx.totalPrice, 'ether'),
+            totalPrice: tx.paymentMethod == 'eth' ? `${web3.utils.fromWei(tx.totalPrice, 'ether')} ETH` : `Rp. ${tx.totalPrice.toLocaleString("id-ID")}`,
+            paymentMethod: tx.paymentMethod,
             timestamp: parseInt(tx.timestamp),
             blockNumber: Number(tx.blockNumber)
         }));
 
         groupedTransaction.value = groupTransactionsByDate(transactions);
-        console.log(transactions);
     } catch (error) {
         console.error("Gagal mengambil transaksi selesai:", error);
     }
@@ -135,15 +135,31 @@ function dailyTotals() {
     const totals = {};
     for (const [date, transactions] of Object.entries(groupedTransaction.value)) {
         if (Array.isArray(transactions)) {
-            totals[date] = transactions.reduce((sum, t) => {
-                // t.totalPrice bisa berupa string atau BigInt
-                const price = typeof t.totalPrice === 'string'
-                    ? parseFloat(t.totalPrice)
-                    : fromWei(t.totalPrice);
-                return sum + price;
-            }, 0);
+            let ethTotal = 0;
+            let cashTotal = 0;
+
+            for (const t of transactions) {
+                if (t.paymentMethod === "cash") {
+                    const rawRupiah = t.totalPrice.split("Rp. ")[1].split(".").join('');
+                    const rupiahAmmount = Number(rawRupiah);
+
+                    cashTotal += rupiahAmmount;
+                } else {
+                    const ethValue = typeof t.totalPrice === 'string'
+                        ? parseFloat(t.totalPrice)
+                        : fromWei(t.totalPrice);
+                    ethTotal += ethValue;
+                }
+            }
+            totals[date] = {
+                eth: ethTotal,
+                cash: cashTotal
+            }
         } else {
-            totals[date] = 0;
+            totals[date] = {
+                eth: 0,
+                cash: 0,
+            };
         }
     }
     return totals;
@@ -171,7 +187,6 @@ async function ETHPrice() {
 const convertToIDR = (ethAmount) => {
     return ethPrice.value ? Math.round(ethAmount * ethPrice.value) : "Loading...";
 };
-
 
 
 dailyTotals()
@@ -223,7 +238,10 @@ ETHPrice()
                 <div style="width: 50%;">
                     <div>
                         <h3>Total Harga</h3>
-                        <p>{{ groupedTransaction[selectedDate][selectedTransactionIndex].totalPrice }} ETH</p>
+                        <p>{{ groupedTransaction[selectedDate][selectedTransactionIndex].totalPrice }}</p>
+                        <h3>Metode Pembayaran</h3>
+                        <p>{{ groupedTransaction[selectedDate][selectedTransactionIndex].paymentMethod.toUpperCase() }}
+                        </p>
                         <h3>Status</h3>
                         <p>{{ groupedTransaction[selectedDate][selectedTransactionIndex].status }}</p>
                         <h3>Tanggal Pembelian</h3>
@@ -258,14 +276,15 @@ ETHPrice()
                         <th>Tanggal</th>
                         <th>ID Transaksi</th>
                         <th>Pembeli</th>
-                        <th>Total Harga (ETH)</th>
+                        <th>Total Harga</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <template v-for="(transactions, date) in groupedTransaction" :key="date">
                     <tr v-for="(transaction, index) in transactions" :key="transaction.id">
-                        <td v-if="index === 0" :rowspan="transactions.length">{{ date }}</td>
+                        <td v-if="index === 0" :rowspan="transactions.length" style="vertical-align: top">{{ date }}
+                        </td>
                         <td>{{ transaction.id }}</td>
                         <td>{{ maskAddress(transaction.buyer) }}</td>
                         <td>{{ transaction.totalPrice }}</td>
@@ -276,9 +295,11 @@ ETHPrice()
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; font-weight: bold;">Total Uang Masuk :</td>
-                        <td style="font-weight: bold;">{{ dailyProfits[date] }} ETH / Rp.
-                            {{ convertToIDR(dailyProfits[date]).toLocaleString("ID-id") }}</td>
+                        <td style="text-align:center; font-weight: bold;" colspan="2">Total Uang
+                            Masuk :</td>
+                        <td style="font-weight: bold;"><span style="display:block; text-align: end;">{{
+                            dailyProfits[date].eth }} ETH</span><span style="display: block; text-align: end;">Rp.
+                                {{ dailyProfits[date].cash.toLocaleString("ID-id") }}</span></td>
                     </tr>
                 </template>
             </table>
@@ -319,8 +340,8 @@ table td {
     text-align: center;
     padding-top: 1rem;
     border-bottom: 1px solid rgb(207, 207, 207);
-
 }
+
 
 table th {
     font-size: 1.3rem;

@@ -19,8 +19,6 @@ const links = ref([
     { name: "Pengguna", link: "/users", icon: '/assets/icon/Pengguna.png', isVisible: props.role === "Admin" || props.role === "Warehouse_Staff" },
 ])
 
-console.log(props.role)
-
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 const token = Cookies.get("AUTH_TOKEN")
 

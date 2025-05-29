@@ -14,10 +14,6 @@ const groupedTransactions = ref([]);
 const ethPrice = ref();
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
-const convertToETH = (idrPrice) => {
-    return ethPrice.value ? (idrPrice / ethPrice.value).toFixed(6) : "Loading...";
-};
-
 async function getDataUser() {
     try {
         const response = await axios.get(`${BACKEND_BASE_URL}/user`)
@@ -57,10 +53,10 @@ async function getUserTransactions() {
                 buyer: transactions[i][1],
                 productIds: transactions[i][2],
                 quantities: transactions[i][3][0].toLocaleString(),
-                totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
-                timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
-                status: transactions[i][7],
-                txHash: await getTransactionReceipt(transactions[i][8])
+                totalPrice: transactions[i][5] == 'eth' ? `${web3.utils.fromWei(transactions[i][4], 'ether')} ETH` : `Rp. ${transactions[i][4].toLocaleString("id-ID")}`,
+                timestamp: new Date(Number(transactions[i][7]) * 1000).toLocaleString(),
+                status: transactions[i][8],
+                txHash: await getTransactionReceipt(transactions[i][9])
             });
 
             transactions[i][2].forEach(productId => {
@@ -74,6 +70,7 @@ async function getUserTransactions() {
         console.error("Gagal mengambil transaksi:", error);
     }
 }
+
 
 async function getTransactionReceipt(blockNumber) {
     const response = await axios.get(`${BACKEND_BASE_URL}/user/tx/${blockNumber}`)
@@ -146,7 +143,7 @@ getDataUser()
                             ? "" : `+${transactions.products.length - 1} lainnya` }}
                         </h2>
                         <p> {{ transactionsArray[index].buyer }}</p>
-                        <h3>{{ transactionsArray[index].totalPrice }} ETH</h3>
+                        <h3>{{ transactionsArray[index].totalPrice }}</h3>
                         <p>{{ transactionsArray[index].timestamp }}</p>
                         <p>Terverifikasi di Blockchain ✔️</p>
                         <div style="margin-top: 1rem;">

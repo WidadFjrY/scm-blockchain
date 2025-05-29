@@ -21,6 +21,7 @@ contract SupplyChainContract {
         string[] productIds;
         uint256[] quantities;
         uint256 totalPrice;
+        string paymentMethod;
         string shippingAddress;
         uint256 timestamp;
         string status;
@@ -51,6 +52,7 @@ contract SupplyChainContract {
         string[] productIds,
         uint256[] quantities,
         uint256 totalPrice,
+        string paymentMethod,
         string shippingAddress,
         uint256 timestamp,
         string status,
@@ -175,7 +177,8 @@ contract SupplyChainContract {
     function createTransaction(
         string[] memory _productIds,
         uint256[] memory _quantities,
-        string memory _shippingAddress
+        string memory _shippingAddress,
+        string memory _paymentMethod
     ) public payable {
         require(_productIds.length == _quantities.length, "Invalid input");
         require(_productIds.length > 0, "No products specified");
@@ -188,6 +191,7 @@ contract SupplyChainContract {
             _productIds,
             _quantities,
             msg.value,
+            _paymentMethod,
             _shippingAddress,
             block.timestamp,
             "Pending",
@@ -202,6 +206,7 @@ contract SupplyChainContract {
             _productIds,
             _quantities,
             msg.value,
+            _paymentMethod,
             _shippingAddress,
             block.timestamp,
             "Pending",
@@ -212,8 +217,10 @@ contract SupplyChainContract {
     function createTransactionWithOtherPayments(
         string[] memory _productIds,
         uint256[] memory _quantities,
-        string memory _shippingAddress
-    ) public payable {
+        string memory _shippingAddress,
+        uint256 _totalPrice,
+        string memory _paymentMethod
+    ) public {
         require(_productIds.length == _quantities.length, "Invalid input");
         require(_productIds.length > 0, "No products specified");
 
@@ -223,10 +230,11 @@ contract SupplyChainContract {
             msg.sender,
             _productIds,
             _quantities,
-            0,
+            _totalPrice,
+            _paymentMethod,
             _shippingAddress,
             block.timestamp,
-            "Pending",
+            "Belum Dibayar",
             block.number
         );
 
@@ -235,10 +243,11 @@ contract SupplyChainContract {
             msg.sender,
             _productIds,
             _quantities,
-            0,
+            _totalPrice,
+            _paymentMethod,
             _shippingAddress,
             block.timestamp,
-            "Pending",
+            "Belum Dibayar",
             block.number
         );
     }

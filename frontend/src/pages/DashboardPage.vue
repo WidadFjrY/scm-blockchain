@@ -79,11 +79,11 @@ async function getAllPendingTransactions() {
                 id: transactions[i][0],
                 buyer: transactions[i][1],
                 productIds: transactions[i][2],
-                quantities: transactions[i][3].map(qty => Number(qty).toLocaleString()),
-                totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
-                shippingAddress: transactions[i][5],
-                timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
-                status: transactions[i][7]
+                quantities: transactions[i][3][0].toLocaleString(),
+                totalPrice: transactions[i][5] == 'eth' ? `${web3.utils.fromWei(transactions[i][4], 'ether')} ETH` : `Rp. ${transactions[i][4].toLocaleString("id-ID")}`,
+                timestamp: new Date(Number(transactions[i][7]) * 1000).toLocaleString(),
+                status: transactions[i][8],
+                txHash: await getTransactionReceipt(transactions[i][9])
             });
 
             transactionsArray.value[i].productIds.forEach(productId => {
@@ -98,6 +98,16 @@ async function getAllPendingTransactions() {
         console.error("Gagal mengambil transaksi yang belum selesai:", error);
     }
 }
+
+async function getTransactionReceipt(blockNumber) {
+    const response = await axios.get(`${BACKEND_BASE_URL}/user/tx/${blockNumber}`)
+    if (!response.data.data) {
+        receipt.value = {}
+        return
+    }
+    return response.data.data.tx_hash
+}
+
 
 async function getProduct(trxId, productId) {
     try {
@@ -149,7 +159,7 @@ getTotal()
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="!products">
+                            <tr v-if="products.length === 0">
                                 <td colspan="4" style="text-align: center; color: gray;">Belum ada produk</td>
                             </tr>
                             <tr v-else v-for="(product, index) in products.slice(0, 5)" :key="product.id">

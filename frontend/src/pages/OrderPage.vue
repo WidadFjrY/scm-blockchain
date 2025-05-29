@@ -50,12 +50,13 @@ async function getAllPendingTransactions() {
                 id: transactions[i][0],
                 buyer: transactions[i][1],
                 productIds: transactions[i][2],
-                quantities: transactions[i][3].map(qty => Number(qty).toLocaleString()),
-                totalPrice: web3.utils.fromWei(transactions[i][4], 'ether'),
-                shippingAddress: transactions[i][5],
-                timestamp: new Date(Number(transactions[i][6]) * 1000).toLocaleString(),
-                status: transactions[i][7],
-                blockNumber: transactions[i][8]
+                quantities: transactions[i][3][0].toLocaleString(),
+                totalPrice: transactions[i][5] == 'eth' ? `${web3.utils.fromWei(transactions[i][4], 'ether')} ETH` : `Rp. ${transactions[i][4].toLocaleString("id-ID")}`,
+                paymentMethod: transactions[i][5],
+                shippingAddress: transactions[i][6],
+                timestamp: new Date(Number(transactions[i][7]) * 1000).toLocaleString(),
+                status: transactions[i][8],
+                txHash: transactions[i][9]
             });
 
             transactionsArray.value[i].productIds.forEach(productId => {
@@ -66,18 +67,21 @@ async function getAllPendingTransactions() {
         await Promise.all(productPromises);
         groupTransactions();
 
+
     } catch (error) {
         console.error("Gagal mengambil transaksi yang belum selesai:", error);
     }
 }
 
 async function getTransactionReceipt(blockNumber) {
+
     const response = await axios.get(`${BACKEND_BASE_URL}/user/tx/${blockNumber}`)
     if (!response.data.data) {
         receipt.value = {}
         return
     }
     receipt.value = response.data.data
+    console.log(transactionsArray.value[0].quantities)
 }
 
 
@@ -110,7 +114,6 @@ const groupTransactions = () => {
     }, {}));
 
     groupedTransactions.value = result;
-    console.log(transactionsArray.value[0].quantities)
 };
 
 async function getDataUserByETHAddr(addr) {
@@ -177,7 +180,7 @@ getAllPendingTransactions();
                                     <h3>Nama Produk</h3>
                                     <p>{{ product.data.product_name }}</p>
                                     <h3>Banyaknya</h3>
-                                    <p>{{ `${transactionsArray[selectedTransactionIndex].quantities[index]}
+                                    <p>{{ `${transactionsArray[selectedTransactionIndex].quantities}
                                         ${product.data.unit}` }}
                                     </p>
                                 </div>
@@ -194,12 +197,17 @@ getAllPendingTransactions();
                 <div style="width: 50%;">
                     <div>
                         <h3>Total Harga</h3>
-                        <p>{{ transactionsArray[selectedTransactionIndex].totalPrice }} ETH</p>
+                        <p>{{ transactionsArray[selectedTransactionIndex].totalPrice }}</p>
+                    </div>
+                    <div>
+                        <h3>Metode Pembayaran</h3>
+                        <p>{{ transactionsArray[selectedTransactionIndex].paymentMethod.toUpperCase() }}</p>
                     </div>
                     <div>
                         <h3>Ubah Status</h3>
                         <select name="status" id="status" v-model="status">
                             <option disabled value="">-- Pilih status --</option>
+                            <option value="Pending">Verifikasi Pembayaran</option>
                             <option value="Pengiriman">Pengiriman</option>
                             <option value="Selesai">Selesai</option>
                         </select>
@@ -230,7 +238,7 @@ getAllPendingTransactions();
         <NavBarDash :user="user.name" :role="user.role" :title="route.name"></NavBarDash>
         <div class="card-container" v-if="groupedTransactions.length != 0">
             <div v-for="(transactions, index) in groupedTransactions" :key="index" class="card-product"
-                @click.prevent="selectedTransactionHandle(transactions, index), getTransactionReceipt(Number(transactionsArray[index].blockNumber))">
+                @click.prevent="selectedTransactionHandle(transactions, index), getTransactionReceipt(Number(transactionsArray[index].txHash))">
                 <div style="display: flex; align-items: center; gap:2rem">
                     <div class="card-img">
                         <img :src="`${BACKEND_BASE_URL}/${transactions.products[0].data.filepath}`" alt="">
@@ -240,7 +248,7 @@ getAllPendingTransactions();
                             ? "" : `+${transactions.products.length - 1} lainnya` }}
                         </h2>
                         <p> {{ transactionsArray[index].buyer }}</p>
-                        <h3>{{ transactionsArray[index].totalPrice }} ETH</h3>
+                        <h3>{{ transactionsArray[index].totalPrice }}</h3>
                         <p>{{ transactionsArray[index].timestamp }}</p>
                         <p>Terverifikasi di Blockchain ✔️</p>
                     </div>

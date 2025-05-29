@@ -2,7 +2,7 @@
 import NavBar from '@/components/NavBar.vue';
 
 import { web3, SupplyChainContract } from '@/assets/script/eth-transaction.js'
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 
 import axios from 'axios';
 
@@ -12,8 +12,9 @@ const user = ref({
     role: "",
 })
 const ethPrice = ref();
+const paymentMethod = ref("eth");
 const carts = ref([]);
-const shippingAddress = ref("")
+const shippingAddress = ref("");
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 const convertToETH = (idrPrice) => {
@@ -76,40 +77,73 @@ async function checkOutHandle() {
     const account = await web3.eth.getAccounts();
     const userAddress = account[0];
 
-    try {
-        const valueInWei = web3.utils.toWei(convertToETH(totalPrice()).toString(), 'ether');
-        const tx = await SupplyChainContract.methods
-            .createTransaction(productIds, quantities, shippingAddress.value)
-            .send({ from: userAddress, value: valueInWei });
-
-        console.log("Transaction Hash:", tx.transactionHash);
-
-        for (const cart of carts.value) {
-            await deleteCartHandle(cart.product_id);
-        }
-
-        for (let i = 0; i < productIds.length; i++) {
-            await axios.put(`${BACKEND_BASE_URL}/product/stock`, {
-                product_id: productIds[i],
-                stock_in: 0,
-                stock_out: quantities[i]
-            });
-        }
-
-        const receipt = await web3.eth.getTransactionReceipt(tx.transactionHash);
-
+    if (paymentMethod.value == "eth") {
         try {
-            await axios.post(`${BACKEND_BASE_URL}/user/tx`, {
-                tx_hash: tx.transactionHash,
-                block_address: receipt.blockHash,
-                block_number: Number(receipt.blockNumber),
-            })
-        } catch (errorAPI) {
-            console.log(errorAPI)
+            const valueInWei = web3.utils.toWei(convertToETH(totalPrice()).toString(), 'ether');
+            const tx = await SupplyChainContract.methods
+                .createTransaction(productIds, quantities, shippingAddress.value, "eth")
+                .send({ from: userAddress, value: valueInWei });
+
+            for (const cart of carts.value) {
+                await deleteCartHandle(cart.product_id);
+            }
+
+            for (let i = 0; i < productIds.length; i++) {
+                await axios.put(`${BACKEND_BASE_URL}/product/stock`, {
+                    product_id: productIds[i],
+                    stock_in: 0,
+                    stock_out: quantities[i]
+                });
+            }
+
+            const receipt = await web3.eth.getTransactionReceipt(tx.transactionHash);
+
+            try {
+                await axios.post(`${BACKEND_BASE_URL}/user/tx`, {
+                    tx_hash: tx.transactionHash,
+                    block_address: receipt.blockHash,
+                    block_number: Number(receipt.blockNumber),
+                })
+            } catch (errorAPI) {
+                console.log(errorAPI)
+            }
+            window.location.href = "/"
+        } catch (error) {
+            console.error("Transaksi gagal:", error);
         }
-        window.location.href = "/"
-    } catch (error) {
-        console.error("Transaksi gagal:", error);
+    } else {
+        try {
+            const tx = await SupplyChainContract.methods
+                .createTransactionWithOtherPayments(productIds, quantities, shippingAddress.value, totalPrice(), "cash")
+                .send({ from: userAddress });
+
+            for (const cart of carts.value) {
+                await deleteCartHandle(cart.product_id);
+            }
+
+            for (let i = 0; i < productIds.length; i++) {
+                await axios.put(`${BACKEND_BASE_URL}/product/stock`, {
+                    product_id: productIds[i],
+                    stock_in: 0,
+                    stock_out: quantities[i]
+                });
+            }
+
+            const receipt = await web3.eth.getTransactionReceipt(tx.transactionHash);
+
+            try {
+                await axios.post(`${BACKEND_BASE_URL}/user/tx`, {
+                    tx_hash: tx.transactionHash,
+                    block_address: receipt.blockHash,
+                    block_number: Number(receipt.blockNumber),
+                })
+            } catch (errorAPI) {
+                console.log(errorAPI)
+            }
+            window.location.href = "/"
+        } catch (error) {
+            console.error("Transaksi gagal:", error);
+        }
     }
 }
 
@@ -167,10 +201,36 @@ getData()
                     </div>
                 </div>
             </div>
-            <h2 style="text-align: end;">Total (ETH): {{ convertToETH(totalPrice()) }} ETH</h2>
-            <h2 style="text-align: end;">Total (IDR): Rp. {{ totalPrice().toLocaleString("ID-id") }}</h2>
-            <label for="shippingAddress">Alamat Pengiriman</label>
-            <input type="text" id="shippingAddress" v-model="shippingAddress">
+            <label for="shippingAddress" class="shipping">Alamat Pengiriman</label>
+            <input type="text" id="shippingAddress" v-model="shippingAddress" class="shippingInput">
+            <div class="radio-button">
+                <h3>Pilih Metode Pembayaran</h3>
+                <label :class="paymentMethod == 'eth' ? 'active' : ''">
+                    <input type="radio" value="eth" v-model="paymentMethod" />
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <img src="@/assets/img/eth-logo.png" width="40" alt="">
+                            <span>ETH</span>
+                        </div>
+                        <span style="text-align: end;">{{ convertToETH(totalPrice()) }} ETH</span>
+                    </div>
+                </label>
+                <label :class="paymentMethod == 'cash' ? 'active' : ''">
+                    <input type="radio" value="cash" v-model="paymentMethod" />
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <img src="@/assets/img/money.png" alt="">
+                            <span>Cash (Bayar di Toko)</span>
+                        </div>
+                        <span style="text-align: end;">Rp. {{ totalPrice().toLocaleString("ID-id") }}</span>
+
+                    </div>
+                </label>
+            </div>
+            <h2 style="text-align: end; margin-top: 2rem;" v-if="paymentMethod == 'eth'">Total (ETH): {{
+                convertToETH(totalPrice()) }} ETH</h2>
+            <h2 style="text-align: end; margin-top: 2rem;" v-else>Total (IDR): Rp. {{
+                totalPrice().toLocaleString("ID-id") }}</h2>
             <div class="card-btn">
                 <button @click.prevent="checkOutHandle" :disabled="!shippingAddress">Check Out</button>
             </div>
@@ -275,16 +335,16 @@ button:disabled {
     opacity: 0.4;
 }
 
-label {
+.shipping {
     display: block;
     font-size: 1.3rem;
     font-weight: 600;
 }
 
-input {
+.shippingInput {
     width: 100%;
     height: 3rem;
-    border-radius: 1.5rem;
+    border-radius: 0.5rem;
     border: none;
     outline: none;
     font-size: 1.2rem;
@@ -292,5 +352,34 @@ input {
     color: var(--dark-color);
     background-color: #f2f2f2;
     margin-top: 0.5rem;
+}
+
+.radio-button h3 {
+    margin-top: 2rem;
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.radio-button label {
+
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    padding: 1rem;
+    display: block;
+    background-color: white;
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.active {
+    background-color: rgb(234, 246, 255) !important;
+    border: 1px solid var(--background) !important;
+    cursor: default !important;
+}
+
+.radio-button input {
+    display: none;
 }
 </style>
